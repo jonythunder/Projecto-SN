@@ -9,8 +9,8 @@ const.c = 299792458;
 %algoritmo de detecção de intrusão.
 
 %load input data
-input_data_path='test_data/20170529162136.txt';
-fin=fopen(input_data_path);
+input_data_path = 'test_data/teste2.nmea';
+fin = fopen(input_data_path);
 if fin == -1
     disp('Erro no ficheiro');
     return;
@@ -18,6 +18,12 @@ end
 
 %parse the NMEA data and get a vector of (Lat,Lon,Height,time) points
 [position_points] = parse_NMEA(fin);
-point1 = llh2xyz([deg2rad(position_points(1,1:2)) position_points(1,3)],const.a,const.f);
 
-overlap_check(point1);
+count = 0; triggered_lines = [];
+for aux = 1:max(size(position_points))
+	point = llh2xyz([deg2rad(position_points(aux,1:2)) position_points(aux,3)],const.a,const.f);
+	if overlap_check(point)
+		count = count + 1;
+		triggered_lines = [triggered_lines aux];
+	end
+end

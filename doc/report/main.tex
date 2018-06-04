@@ -40,21 +40,61 @@
 
 \section{Objectivo}
 
-\begin{itemize}
-	\item Formular matematicamente a solução de GPS diferencial (ir buscar a literatura/internet)
-	\item Preparar um algoritmo que permita definir um volume para a área restrita (em coordenadas ECEF(XYZ)) 
-	\item Ter como opção de output um ficheiro KML desse volume
-	\item Preparar um algoritmo que compute as coordenadas do receptor no referencial ECEF e determine intrusão na área restrita
-	\item Inicialmente não será feita análise em tempo real nem usando DGPS, de forma a poder testar mais rapidamente os resultados, usando para tal um receptor GPS de smartphone a fazer logging da posição e detectar quando/onde foram feitas intrusões
-	\item Numa primeira fase usar apenas uma área restrita para validar o algoritmo, criando áreas restritas adicionais posteriormente (e voltando a validar)
-	\item Criar um algoritmo que receba o output do receptor GPS usando porta série e descodifique o resultado (se necessário)
-	\item Criar um algoritmo para obter a informação da ground-station (se necessário)
-	\item Criar um algoritmo que use o output do receptor GPS e a informação da ground-station para determinar a posição usando DGPS
-	\item Testar o algoritmo (em tempo real) de forma a determinar a intrusão em apenas uma área restrita e posteriormente em mais que uma, com output gráfico de aviso de intrusão
-	\item Gerar um ficheiro KML com o percurso realizado e as áreas restritas, bem como tendo as intrusões devidamente identificadas
-\end{itemize}
+O objetivo do projeto é a implementação de um sistema de
+posicionamento GPS diferencial
 
-\subsection{Bonus objectives (a pensar nisto só depois de acabado o projecto)}
-Obter a dinâmica do utilizador (velocidade, rumo) e originar aviso se, à velocidade actual, for entrar na zona restrita em menos de X segundos
+\section{GPS Diferencial}
+
+Neste projeto implementámos melhoramentos de GPS através do método
+conhecido como GPS diferencial. GPS diferencial é um sistema para
+corrigir a posição retornada por um recetor GPS convencional. Este
+sistema utiliza um recetor de posição fixa pré-determinada para
+calcular erros nos \textit{pseudo-ranges} em tempo real.
+
+\subsection{Funcionamento}
+
+A correção é realizada nos valores dos \textit{pseudo-ranges}
+calculados pelo recetor local através dos satélites do sistema GPS.
+Estes erros, que advêm do facto da influência da atmosfera no sinal
+de GPS não ser constante, são calculados pela diferença dos
+\textit{pseudo-ranges} da estação fixa e a distância real desta aos
+satélites, cuja posição é conhecida pois esta está presente no sinal
+de GPS. Uma vez calculados estes erros, estes são transmitidos ao
+recetor local e subtraídos aos \textit{pseudo-ranges} calculados por
+este. Calcula-se então a posição utilizando o método de GPS, mas
+utilizando desta vez os \textit{pseudo-ranges} corrigidos.
+
+Sendo $r_{GS}$ a distância entre o satélite $N$ e a
+estação local, e $\rho_{GS}$ o \textit{pseudo-range} obtido nesta, temos,
+para cada satélite, o erro $e$ na equação \ref{sat_error}.
+\begin{gather} \label{sat_error}
+	\left[\begin{matrix}
+		e^{(1)} \\
+        e^{(2)} \\
+        \vdots \\
+        e^{(N)} \\
+	\end{matrix}\right]
+	= \left[\begin{matrix}
+		r^{(1)}_{GS} - \rho^{(1)}_{GS} \\
+        r^{(2)}_{GS} - \rho^{(2)}_{GS} \\
+        \vdots \\
+        r^{(N)}_{GS} - \rho^{(N)}_{GS} \\
+	\end{matrix}\right]
+\end{gather}
+Sendo $\rho^{(N)}_{r}$ os \textit{pseudo-range} obtido pelo receptor local, temos $\rho*^{N}_r \\$ como o valor corrigido para o receptor local do \textit{pseudo-range}.
+\begin{gather} \label{new_range}
+	\left[\begin{matrix}
+		\rho*^{1}_r \\
+        \rho*^{2}_r \\
+        \vdots \\
+        \rho*^{N}_r \\
+	\end{matrix}\right]
+	= \left[\begin{matrix}
+		\rho^{(1)}_{r} - e^{(1)} \\
+        \rho^{(2)}_{r} - e^{(2)} \\
+        \vdots \\
+        \rho^{(N)}_{r} - e^{(N)} \\
+	\end{matrix}\right]
+\end{gather}
 
 \end{document}

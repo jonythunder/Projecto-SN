@@ -1,0 +1,60 @@
+\documentclass{article}
+
+\input{preamble}
+
+\begin{document}
+
+\thispagestyle{empty}
+
+\includegraphics[viewport=9.5cm 11cm 0cm 0cm,scale=0.29]{IST_A_CMYK_POS}
+	
+\begin{center}
+	\vspace{70mm} % --  Espaço em branco
+	\rule{\linewidth}{0.5pt} \\
+    \vspace{2mm}
+	\Huge \textsc{Projecto de Sistemas de Navegação} \\
+	\rule{\linewidth}{2pt} \\
+	\vspace{8mm} % -- Espaço em branco
+	\LARGE Desenvolvimento de um sistema de detecção de intromissão em áreas restritas baseado em GPS diferencial
+	
+	\vspace{\fill} % --  Espaço em branco variável
+	\large
+	
+	\begin{tabular}{r l}
+		Tiago \textsc{Matias} & \textbf{65655} \\
+		João \textsc{Manito} & \textbf{73096} \\
+		Daniel \textsc{de Schiffart} & \textbf{81479}
+	\end{tabular}
+	
+	\vspace{10mm} % --  Espaço em branco
+	\Large Instituto Superior Técnico \\
+	Mestrado em Engenharia Aeroespacial \\
+	\vspace{1mm}
+	\large Gestão de Projetos
+	
+	\vspace{10mm} % --  Espaço em branco
+	\Large Junho de 2018
+\end{center}
+
+\newpage
+
+\section{Objectivo}
+
+\begin{itemize}
+	\item Formular matematicamente a solução de GPS diferencial (ir buscar a literatura/internet)
+	\item Preparar um algoritmo que permita definir um volume para a área restrita (em coordenadas ECEF(XYZ)) 
+	\item Ter como opção de output um ficheiro KML desse volume
+	\item Preparar um algoritmo que compute as coordenadas do receptor no referencial ECEF e determine intrusão na área restrita
+	\item Inicialmente não será feita análise em tempo real nem usando DGPS, de forma a poder testar mais rapidamente os resultados, usando para tal um receptor GPS de smartphone a fazer logging da posição e detectar quando/onde foram feitas intrusões
+	\item Numa primeira fase usar apenas uma área restrita para validar o algoritmo, criando áreas restritas adicionais posteriormente (e voltando a validar)
+	\item Criar um algoritmo que receba o output do receptor GPS usando porta série e descodifique o resultado (se necessário)
+	\item Criar um algoritmo para obter a informação da ground-station (se necessário)
+	\item Criar um algoritmo que use o output do receptor GPS e a informação da ground-station para determinar a posição usando DGPS
+	\item Testar o algoritmo (em tempo real) de forma a determinar a intrusão em apenas uma área restrita e posteriormente em mais que uma, com output gráfico de aviso de intrusão
+	\item Gerar um ficheiro KML com o percurso realizado e as áreas restritas, bem como tendo as intrusões devidamente identificadas
+\end{itemize}
+
+\subsection{Bonus objectives (a pensar nisto só depois de acabado o projecto)}
+Obter a dinâmica do utilizador (velocidade, rumo) e originar aviso se, à velocidade actual, for entrar na zona restrita em menos de X segundos
+
+\end{document}

@@ -34,11 +34,17 @@ end
 % xyz = gnsspos_final(pr_current, satellites_prerror);
 
 %% Overlap check
-count = 0; triggered_lines = [];
-for aux = 1:max(size(position_points))
-	point = llh2xyz([deg2rad(position_points(aux,1:2)) position_points(aux,3)],const.a,const.f);
-	if overlap_check(point)
-		count = count + 1;
-		triggered_lines = [triggered_lines aux];
-	end
+
+% count = 0; triggered_lines = [];
+% for aux = 1:max(size(position_points))
+% 	point = llh2xyz([deg2rad(position_points(aux,1:2)) position_points(aux,3)],const.a,const.f);
+% 	if overlap_check(point)
+% 		count = count + 1;
+% 		triggered_lines = [triggered_lines aux];
+% 	end
+% end
+
+[overlap,area] = overlap_check(xyz);
+if overlap
+	warning('Current location is overlapping area %d.',area);
 end

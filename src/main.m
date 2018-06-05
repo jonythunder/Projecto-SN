@@ -6,6 +6,9 @@ const.a = 6378137;
 const.f = 1/298.257223563;
 const.c = 299792458;
 
+WN = 1744;
+TOW = 327796;
+
 % fd_eph = fopen('ephemerides.eph'); % -- Verificao de presenca de ficheiro
 % if fd_eph == -1
 % 	error('File "ephemerides.eph" not found.');
@@ -16,8 +19,8 @@ const.c = 299792458;
 % 	error('File "presudoranges.pr" not found.');
 % end
 
-input_data_path = 'test_data/teste2.nmea'; % -- load input data
-fin = fopen(input_data_path);
+input_nmea_path = 'test_data/teste2.nmea'; % -- load input NMEA data
+fin = fopen(input_nmea_path);
 if fin == -1
     disp('Erro no ficheiro');
     return;
@@ -29,9 +32,19 @@ end
 %parse the NMEA data and get a vector of (Lat,Lon,Height,time) points
 [position_points] = parse_NMEA(fin);
 
+%% Calculating pseudo-ranges
+input_raw = load('test_data/ub1.ubx.1744.327600.raw');
+
+pr_raw = zeros(50,2); pr_line = 13;
+for aux = 1:50
+	pr_raw(aux,:) = [input_raw(pr_line,(aux - 1)*10 + 4) input_raw(pr_line,(aux - 1)*10 + 11)];
+end
+
+input_eph = load('test_data/ub1.ubx.1744.327600.eph');
+
 %% Position based on pseudo-ranges
 
-% xyz = gnsspos_final(pr_current, satellites_prerror);
+xyz = gnsspos_final(pr_current, satellites_prerror);
 
 %% Overlap check
 

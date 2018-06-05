@@ -1,6 +1,5 @@
-% Fun√ß√£o que recebe os pseudo-ranges da ground station gs, cuja posi√ß√£o √©
-% conhecida, e as efem√©rides dos sate√©lites, v√°lidas para o momento em
-% causa. Devolve o erro do pesudo-range para cada sat√©lite.
-function satellites_prerror = gs_error(fd_eph,fd_gspr)
-
+% FunÁ„oo que recebe aposiÁ„o do Satelite em xyz, o pseudorange e a posiÁ„o da Ground Station em xyz. Devolve o erro do pesudo-range para este satelite.
+function satellites_prerror = gs_error(sat_pos,pr,base_pos)
+r=norm(base_pos-sat_pos);
+satellites_prerror=r-pr;
 end

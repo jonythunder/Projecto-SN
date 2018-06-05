@@ -1,0 +1,263 @@
+GPS Ephemeris Format (EPH)
+ASCII format, one line per satellite, with the following tab separated fields:
+
+(1) - SV# (1...32)
+
+(2) - IODE sf2 - Issue Of Data Ephemeris (8 bits) [0...255]
+                 (consistent with the 8 LSbs of the IODC) (Subframe #2)
+                 
+(3) - IODE sf3 - Issue Of Data Ephemeris (8 bits) [0...255]
+                 (consistent with the 8 LSbs of the IODC) (Subframe #3)
+
+(4) - WN (Week Number: weeks; 10 bits)
+
+(5..7) - toe - Ephemeris Reference Time 
+   (5) - 16 MS bits; range: [0...604784]; hexadecimal notation
+   (6) - 16 MS bits; range: [0...604784]; decimal notation
+   (7) - 20 bits; the 4 LS bits are zero; units s
+
+(8) - Fit Interval flag (1 bit; 0 - 4 hours; 1 - 6 hours)
+
+(9..10) - SV Health
+    (9) - 6 bits; hexadecimal notation
+   (10) - 6 bits; decimal notation
+          bit 5: summary of the health of the nav data
+                 0 - All navigation data is good
+                 1 - Some or all navigation data is bad
+          bit 0-4: health of satellite signal components
+                   0 - All signals OK.
+                   1 - All signals week (3 to 6 dB below 
+                       specified power level due to reduced 
+                       power output, excess phase noise, 
+                       satellite attitude, etc).
+                   2 - All signals dead.
+                   3 - All signals have no data modulation.
+                   4 - L1 P signal week.
+                   5 - L1 P signal dead.
+                   6 - L1 P signal has no data modulation.
+                   7 - L2 P signal week.
+                   8 - L2 P signal dead.
+                   9 - L2 P signal has no data modulation.
+                  10 - L1 C/A signal week.
+                  11 - L1 C/A signal dead.
+                  12 - L1 C/A signal has no data modulation.
+                  13 - L2 C/A signal week.
+                  14 - L2 C/A signal dead.
+                  15 - L2 C/A signal has no data modulation.
+                  16 - L1 & L2 P signal week.
+                  17 - L1 & L2 P signal dead.
+                  18 - L1 & L2 P signal has no data modulation.
+                  19 - L1 & L2 C/A signal week.
+                  20 - L1 & L2 C/A signal dead.
+                  21 - L1 & L2 C/A signal has no data modulation.
+                  22 - L1 signal week (3 to 6 dB below 
+                       specified power level due to reduced 
+                       power output, excess phase noise, 
+                       satellite attitude, etc).
+                  23 - L1 signal dead.
+                  24 - L1 signal has no data modulation.
+                  25 - L2 signal week (3 to 6 dB below 
+                       specified power level due to reduced 
+                       power output, excess phase noise, 
+                       satellite attitude, etc).
+                  26 - L2 signal dead.
+                  27 - L2 signal has no data modulation.
+                  28 - Satellite is temporarily out - do not 
+                       use this satellite during current pass.
+                  29 - Satellite will be temporarily out - use 
+                       with caution.
+                  30 - Spare.
+                  31 - More than one combination of codes is 
+                       required to describe anomalies.
+
+(11) - URA index - User Range Accuracy (4 bits)
+                   0        0.00 < URA <=    2.40
+                   1        2.40 < URA <=    3.40
+                   2        3.40 < URA <=    4.85
+                   3        4.85 < URA <=    6.85
+                   4        6.85 < URA <=    9.65
+                   5        9.65 < URA <=   13.65
+                   6       13.65 < URA <=   24.00
+                   7       24.00 < URA <=   48.00
+                   8       48.00 < URA <=   96.00
+                   9       96.00 < URA <=  192.00
+                   10     192.00 < URA <=  384.00
+                   11     384.00 < URA <=  768.00
+                   12     768.00 < URA <= 1536.00
+                   13    1536.00 < URA <= 3072.00
+                   14    3072.00 < URA <= 6144.00
+                   15    6144.00 < URA (or no accuracy prediction is available 
+                                        - unauthorized users are advised to use
+                                        the SV at their own risk.)
+
+(12) - "Alert" flag (1 bit)
+       1 - URA may be worse than indicated in Subframe 1
+       0 - otherwise
+
+(13) - Anti-Spoof flag (1 bit)
+       0 - A-S mode is OFF
+       1 - A-S mode is ON
+
+(14) - Code on L2 Channel (2 bits): 00 - reserved
+                                    01 - P code ON
+                                    10 - C/A code ON
+
+(15) - L2 P Data flag (Data Flag for L2 P-Code; 1 bit)
+       1 - the NAV data stream was commanded
+           OFF on the P code of the L2 channel.
+       0 - otherwise.
+
+(16..18) - TGD - Estimated Group Delay Differential
+    (16) - 8 bits; signed; hexadecimal notation;
+           scale factor: 2**-31; units: s
+    (17) - 8 bits; signed; decimal notation;
+           scale factor: 2**-31; units: s
+    (18) - No scale factor; units: s
+
+(19) - IODC - Issue Of Data Clock (10 bits) [0...1023]
+
+Satellite Clock Correction Parameters (toc,af2,af1,af0)
+(20..22) - toc
+    (20) - 16 MS bits; range: [0...604784]; hexadecimal notation
+    (21) - 16 MS bits; range: [0...604784]; decimal notation
+    (22) - 20 bits; the 4 LS bits are zero; units s
+
+(23..25) - af2
+    (23) - 8 bits; signed; hexadecimal notation;
+           scale factor: 2**-55; units: s/s2
+    (24) - 8 bits; signed; decimal notation;
+           scale factor: 2**-55; units: s/s2
+    (25) - no scale factor; units: s/s2
+
+(26..28) - af1
+    (26) - 16 bits; signed; hexadecimal notation;
+           scale factor: 2**-43; units: s/s
+    (27) - 16 bits; signed; decimal notation;
+           scale factor: 2**-43; units: s/s
+    (28) - no scale factor; units: s/s
+
+(29..31) - af0
+    (29) - 22 bits; signed; hexadecimal notation;
+           scale factor: 2**-31; units: s/s2
+    (30) - 22 bits; signed; decimal notation;
+           scale factor: 2**-31; units: s/s2
+    (31) - no scale factor; units: s/s2
+
+(32..34) - sqrt(A) - Square Root of the Semi-Major Axis
+    (32) - 32 bits; hexadecimal notation;
+           scale factor: 2**-19; units: m1/2
+    (33) - 32 bits; decimal notation;
+           scale factor: 2**-19; units: m1/2
+    (34) - no scale factor; units: m1/2
+
+(35..37) - delta n - Mean Motion Difference From Computed Value
+    (35) - 16 bits; signed; hexadecimal notation;
+           scale factor: 2**-43; units: semicircles/s
+    (36) - 16 bits; signed; decimal notation;
+           scale factor: 2**-43; units: semicircles/s
+    (37) - no scale factor; units: radians/s
+
+(38..40) - Mo - Mean Anomaly at Reference Time
+    (38) - 32 bits; signed; hexadecimal notation;
+           scale factor: 2**-31; units: semicircles
+    (39) - 32 bits; signed; decimal notation;
+           scale factor: 2**-31; units: semicircles
+    (40) - no scale factor; units: radians
+
+(41..43) - e - Eccentricity
+    (41) - 32 bits; hexadecimal notation;
+           scale factor: 2**-33; range: [0,0.03]
+    (42) - 32 bits; decimal notation;
+           scale factor: 2**-33; range: [0,0.03]
+    (43) - no scale factor;
+
+(44..46) - Argument of Perigee
+    (44) - 32 bits; signed; hexadecimal notation;
+           scale factor: 2**-31; units: semicircles
+    (45) - 32 bits; signed; decimal notation;
+           scale factor: 2**-31; units: semicircles
+    (46) - no scale factor; units: radians
+
+(47..49) - io - Inclination Angle at Reference Time
+    (47) - 32 bits; signed; hexadecimal notation;
+           scale factor: 2**-31; units: semicircles
+    (48) - 32 bits; signed; decimal notation;
+           scale factor: 2**-31; units: semicircles
+    (49) - no scale factor; units: radians
+
+(50..52) - IDOT - Rate of Inclination Angle 
+    (50) - 14 bits; signed; hexadecimal notation;
+           scale factor: 2**-43; units: semicircles/s
+    (51) - 14 bits; signed; decimal notation;
+           scale factor: 2**-43; units: semicircles/s
+    (52) - no scale factor; units: radians/s
+        
+(53..55) - Omega0 - Longitude of Ascending Node of Orbit Plane at Weekly Epoch
+    (53) - 32 bits; signed; hexadecimal notation;
+           scale factor: 2**-31; units: semicircles
+    (54) - 32 bits; signed; decimal notation;
+           scale factor: 2**-31; units: semicircles
+    (55) - no scale factor; units: radians
+
+(56..58) - OmegaDot - Rate of Right Ascension
+    (56) - 24 bits; signed; hexadecimal notation;
+           scale factor: 2**-43; units: semicircles/s
+    (57) - 24 bits; signed; decimal notation;
+           scale factor: 2**-43; units: semicircles/s
+    (58) - no scale factor; units: radians/s
+
+(59..61) - Cuc - Amplitude of the Cosine Harmonic Correction Term 
+                 to the Argument of Latitude
+    (59) - 16 bits; signed; hexadecimal notation;
+           scale factor: 2**-29; units: radians
+    (60) - 16 bits; signed; decimal notation;
+           scale factor: 2**-29; units: radians
+    (61) - no scale factor; units: radians
+
+(62..64) - Cus - Amplitude of the Sine Harmonic Correction Term 
+                 to the Argument of Latitude
+    (62) - 16 bits; signed; hexadecimal notation;
+           scale factor: 2**-29; units: radians
+    (63) - 16 bits; signed; decimal notation;
+           scale factor: 2**-29; units: radians
+    (64) - no scale factor; units: radians
+
+(65..67) - Crc - Amplitude of the Cosine Harmonic Correction Term 
+                 to the Orbit Radius
+    (65) - 16 bits; signed; hexadecimal notation;
+           scale factor: 2**-5; units: m
+    (66) - 16 bits; signed; decimal notation;
+           scale factor: 2**-5; units: m
+    (67) - no scale factor; units: m
+
+(68..70) - Crs - Amplitude of the Sine Harmonic Correction Term 
+                 to the Orbit Radius
+    (68) - 16 bits; signed; hexadecimal notation;
+           scale factor: 2**-5; units: m
+    (69) - 16 bits; signed; decimal notation;
+           scale factor: 2**-5; units: m
+    (70) - no scale factor; units: m
+
+(71..73) - Cic - Amplitude of the Cosine Harmonic Correction Term 
+                 to the Angle of Inclination
+    (71) - 16 bits; signed; hexadecimal notation;
+           scale factor: 2**-29; units: radians
+    (72) - 16 bits; signed; decimal notation;
+           scale factor: 2**-29; units: radians
+    (73) - no scale factor; units: radians
+
+(74..76) - Cis - Amplitude of the Sine Harmonic Correction Term 
+                 to the Angle of Inclination
+    (74) - 16 bits; signed; hexadecimal notation;
+           scale factor: 2**-29; units: radians
+    (75) - 16 bits; signed; decimal notation;
+           scale factor: 2**-29; units: radians
+    (76) - no scale factor; units: radians
+
+(77..79) - AODO - Age of Data Offset
+                  Validity time for the NMCT data (not an ephemeris parameter)
+    (77) - 5 bits; range: [0...31]; hexadecimal notation;
+           scale factor: 9000; units: s
+    (78) - 5 bits; range: [0...31]; decimal notation;
+           scale factor: 9000; units: s
+    (79) - 15bits; no scale factor; units: s

@@ -1,0 +1,40 @@
+GPS Raw Measurement Data Format (RAW)
+ASCII format, one line per message, with the following tab separated fields:
+
+(1) iTOW - Measurement integer millisecond GPS time of week (Receiver Time)
+           units: ms
+
+(2) WN - Measurement GPS week number (Receiver Time)
+
+(3) numSV - # of satellites following
+
+The next tab separated fields contain 50 measurement blocks.
+Only the first numSV measurement blocks contain valid data.
+The remaining measurement blocks contain zeros.
+Columns (4..13) contain the first measurement block as described next:
+
+(4) svn - Space Vehicle Number
+(5) mesQI - Nav Measurements Quality Indicator
+            >=4 : PR+DO OK
+            >=5 : PR+DO+CP OK
+            <6 : likely loss of carrier lock in previous interval
+(6) C/No - Signal strength C/No
+           units: dBHz
+(7) LLI - Loss of Lock Indicator (RINEX definition)
+
+(8..9) cp - Carrier phase measurement
+   (8) double in hexadecimal notation
+   (9) units: L1 cycles
+
+(10..11) pr - Pseudorange measurement
+    (10) double in hexadecimal notation
+    (11) units: m
+
+(12..13) do - Doppler measurement
+    (12) double in hexadecimal notation
+    (13) units: Hz
+
+The second measurement block is on columns (14..23).
+The Nth measurement block is on columns (4+10*(N-1)..13+10*(N-1)).
+The last measurement block is on columns (494..503).
+On each line, only the first numSV measurement blocks contain valid data.

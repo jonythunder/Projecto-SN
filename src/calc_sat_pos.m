@@ -1,6 +1,6 @@
-%Funcção que recebe o a tabela das ephemerides, a posição do reciever[x,y,z]m, time
-%of week (seconds) e week number e devolve a posição do satelite at time of
-%transmition in the format [sat_number,x,y,z]m
+% FunÃ§Ã£o que recebe o a tabela das ephemerides, a posiÃ§Ã£o do reciever[x,y,z]m, time
+% of week (seconds) e week number e devolve a posiÃ§Ã£o do satelite at time of
+% transmition in the format [sat_number,x,y,z]m
 
 function sat_pos=calc_sat_pos(eph,r_pos,tow,wn)
 S=eph
@@ -60,7 +60,7 @@ sat_pos(Sat)=[SV, super]
 
 end
 
-%% funcção auxliar que calcula a posição do satelite baseado nas ephemerides
+%% funcï¿½ï¿½o auxliar que calcula a posiï¿½ï¿½o do satelite baseado nas ephemerides
 function [mu,A,e,omega,T,mean_angular1,M,E,true_anom,r0,argument_lat,u,r,i,OMEGA,x,y,z,count] = Contas_efemerides(A,e,t_oe,t_calculado,omega,M0,delta_angular1,OMEGAdot,OMEGA0,Cuc,Cus,Cic,Cis,Crc,Crs,IDOT,i0)
 mu = 3.986005*(10^14);
 

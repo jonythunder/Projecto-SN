@@ -1,0 +1,59 @@
+GPS Health, UTC and ionosphere parameter Format (HUI)
+ASCII format, one line per message, with the following tab separated fields:
+
+SV Health:
+(1) SV Health Bitmask(32 bits; hexadecimal notation; 1 bit per satellite)
+
+UTC Parameters:
+(2..3) A0
+   (2) double in hexadecimal notation
+   (3) units: s
+
+(4..5) A1
+   (4) double in hexadecimal notation
+   (5) units: s/s
+
+(6) WNt - UTC reference week number
+
+(7) tot - Reference time for UTC data
+
+(8) delta_tLS - UTC - delta time due to leap seconds, before event
+
+(9) WNLSF - Future leap second: week number
+
+(10) DN - Future leap second: day number
+
+(11) delta_tLSF - Future leap second: leap seconds after event
+
+Klobuchar Parameters:
+(12..13) alpha0
+    (12) double in hexadecimal notation
+    (13) units: s
+
+(14..15) alpha1
+    (14) double in hexadecimal notation
+    (15) units: s/sc
+
+(16..17) alpha2
+    (16) double in hexadecimal notation
+    (17) units: s/sc^2
+
+(18..19) alpha3
+    (18) double in hexadecimal notation
+    (19) units: s/sc^3
+
+(20..21) beta0
+    (20) double in hexadecimal notation
+    (21) units: s
+
+(22..23) beta1
+    (22) double in hexadecimal notation
+    (23) units: s/sc
+
+(24..25) beta2
+    (24) double in hexadecimal notation
+    (25) units: s/sc^2
+
+(26..27) beta3
+    (26) double in hexadecimal notation
+    (27) units: s/sc^3

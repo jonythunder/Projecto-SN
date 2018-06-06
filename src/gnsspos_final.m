@@ -3,9 +3,6 @@
 % posições dos satélites
 function xyz = gnsspos_final(last_pos,sat_pos,pr_corrected)
 	
-	% matriz com posicoes de satelites - satellites_pos
-	% matriz com pseudoranges dos satelites de 213984 a 213984 + 3600 - npr
-	
 	ref = last_pos;
 	satellites_used = [];
 	pr_used = [];

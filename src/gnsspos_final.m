@@ -3,7 +3,6 @@
 % posições dos satélites
 function xyz = gnsspos_final(last_pos,sat_pos,pr_corrected)
 	
-	ref = last_pos;
 	satellites_used = [];
 	pr_used = [];
 	
@@ -16,8 +15,9 @@ function xyz = gnsspos_final(last_pos,sat_pos,pr_corrected)
 		end
 	end
 	
-	ref = ref';
+	ref = last_pos';
 	satellites_used = satellites_used';
+	
 	e0result = []; h = []; z = []; xest = [];
 	
 	while 1

@@ -60,7 +60,7 @@ sat_pos(Sat)=[SV, super]
 
 end
 
-%% func��o auxliar que calcula a posi��o do satelite baseado nas ephemerides
+%% Função auxliar que calcula a posição do satelite baseado nas ephemerides
 function [mu,A,e,omega,T,mean_angular1,M,E,true_anom,r0,argument_lat,u,r,i,OMEGA,x,y,z,count] = Contas_efemerides(A,e,t_oe,t_calculado,omega,M0,delta_angular1,OMEGAdot,OMEGA0,Cuc,Cus,Cic,Cis,Crc,Crs,IDOT,i0)
 mu = 3.986005*(10^14);
 

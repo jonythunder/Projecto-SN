@@ -41,7 +41,7 @@
 \section{Objectivo}
 
 O objetivo do projeto é a implementação de um sistema de
-posicionamento GPS diferencial
+posicionamento
 
 \section{GPS Diferencial}
 
@@ -64,7 +64,7 @@ recetor local e subtraídos aos \textit{pseudo-ranges} calculados por
 este. Calcula-se então a posição utilizando o método de GPS, mas
 utilizando desta vez os \textit{pseudo-ranges} corrigidos.
 
-Sendo $r_{GS}$ a distância entre o satélite $N$ e a
+Sendo $d_{GS}$ a distância entre o satélite $N$ e a
 estação local, e $\rho_{GS}$ o \textit{pseudo-range} obtido nesta, temos,
 para cada satélite, o erro $e$ na equação \ref{sat_error}.
 \begin{gather} \label{sat_error}
@@ -75,19 +75,19 @@ para cada satélite, o erro $e$ na equação \ref{sat_error}.
         e^{(N)} \\
 	\end{matrix}\right]
 	= \left[\begin{matrix}
-		r^{(1)}_{GS} - \rho^{(1)}_{GS} \\
-        r^{(2)}_{GS} - \rho^{(2)}_{GS} \\
+		d^{(1)}_{GS} - \rho^{(1)}_{GS} \\
+        d^{(2)}_{GS} - \rho^{(2)}_{GS} \\
         \vdots \\
-        r^{(N)}_{GS} - \rho^{(N)}_{GS} \\
+        d^{(N)}_{GS} - \rho^{(N)}_{GS} \\
 	\end{matrix}\right]
 \end{gather}
-Sendo $\rho^{(N)}_{r}$ os \textit{pseudo-range} obtido pelo receptor local, temos $\rho*^{N}_r \\$ como o valor corrigido para o receptor local do \textit{pseudo-range}.
+Sendo $\rho^{(N)}_{r}$ o \textit{pseudo-range} obtido pelo receptor local, temos $\rho*_r $ como o valor corrigido para o receptor local do \textit{pseudo-range}, na equação \ref{new_range}.
 \begin{gather} \label{new_range}
 	\left[\begin{matrix}
-		\rho*^{1}_r \\
-        \rho*^{2}_r \\
+		\rho*^{(1)}_r \\
+        \rho*^{(2)}_r \\
         \vdots \\
-        \rho*^{N}_r \\
+        \rho*^{(N)}_r \\
 	\end{matrix}\right]
 	= \left[\begin{matrix}
 		\rho^{(1)}_{r} - e^{(1)} \\
@@ -96,5 +96,5 @@ Sendo $\rho^{(N)}_{r}$ os \textit{pseudo-range} obtido pelo receptor local, temo
         \rho^{(N)}_{r} - e^{(N)} \\
 	\end{matrix}\right]
 \end{gather}
-
+Com estes novos \textit{pseudo-ranges} podemos calcular a posição do receptor local da mesma forma que seria calculada no caso de GPS normal.
 \end{document}

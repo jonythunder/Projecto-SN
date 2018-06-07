@@ -36,6 +36,7 @@ function xyz = gnsspos_final(last_pos,sat_pos,pr_corrected)
 	 	end
 
 		ref = xest(1:3);
+        disp(norm(ref-last_pos'));
 	end
 	
 	xyz = ref;

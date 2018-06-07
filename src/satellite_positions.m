@@ -1,4 +1,4 @@
-function [satellites_pos] = satellite_positions(input_eph,WN,TOW,ref)
+function [satellites_pos] = satellite_positions(input_eph,WN,TOW,ref,input,hui)
 	const.mu_e = 3.986005e+14;
 	const.c = 299792458;
 	const.Omegadot_e = 7.2921151467e-5;

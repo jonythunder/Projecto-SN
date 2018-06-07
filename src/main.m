@@ -32,7 +32,7 @@ input_eph = load('test_data/ub1.ubx.1744.327600.eph');
 input_hui = load('test_data/ub1.ubx.1744.327600.hui');
 %% Calculating pseudo-ranges and satellite positions
 
-[satellites_pos] = satellite_positions(input_eph,WN,TOW,RF1);
+[satellites_pos] = satellite_positions(input_eph,WN,TOW,RF1,input_hui);
 
 pr_raw = zeros(50,2); pr_filtered = []; pr_line = [];
 

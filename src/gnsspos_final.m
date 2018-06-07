@@ -3,10 +3,10 @@
 % posições dos satélites
 function xyz = gnsspos_final(last_pos,sat_pos,pr_corrected)
 	
-	const.a = 6378137;
-	const.f = 1/298.257223563;
-	const.c = 299792458;
-	
+global	const_a
+global	const_f
+global 	const_c
+    
 	satellites_used = [];
 	pr_used = [];
 	
@@ -14,7 +14,7 @@ function xyz = gnsspos_final(last_pos,sat_pos,pr_corrected)
 		for aux2 = 1:size(pr_corrected,1)
 			if sat_pos(aux1,1) == pr_corrected(aux2,1)
 				satellites_used = [satellites_used; sat_pos(aux1,2:4)];
-				pr_used = [pr_used;pr_corrected(aux2,2)];
+				pr_used = [pr_used;pr_corrected(aux2,2)+sat_pos(aux1,5)*const_c];
 			end
 		end
 	end
@@ -53,7 +53,7 @@ function xyz = gnsspos_final(last_pos,sat_pos,pr_corrected)
 	PDOP = sqrt(trace(M(1:3,1:3)));
 	TDOP = sqrt(M(4,4));
 
-	xest_llh = xyz2llh(xest',const.a,const.f);
+	xest_llh = xyz2llh(xest',const_a,const_f);
 	satellites_used_enu = satellites_used;
 	for aux = 1:size(satellites_used,2)
 		[satellites_used_enu(1,aux),satellites_used_enu(2,aux),satellites_used_enu(3,aux)] = ecef2enu(satellites_used(1,aux),...

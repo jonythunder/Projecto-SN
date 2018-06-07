@@ -1,25 +1,26 @@
 % Função que calcula a posição actual utilizando DGPS, recebendo os
 % pseudo-ranges corrigidos via DGPS, uma posição de referência e as
 % posições dos satélites
-function xyz = gnsspos_final(last_pos,sat_pos,pr_corrected)
+function xyz = gnsspos_final(input_eph,input_hui,pr_filtered,WN,TOW,ref)
 	
 global	const_a
 global	const_f
 global 	const_c
     
+	ref = ref';
+	
+	satellites_pos = satellite_positions(input_eph,input_hui,WN,TOW,ref');
+	
 	satellites_used = [];
 	pr_used = [];
-	
-	for aux1 = 1:size(sat_pos,1)
-		for aux2 = 1:size(pr_corrected,1)
-			if sat_pos(aux1,1) == pr_corrected(aux2,1)
-				satellites_used = [satellites_used; sat_pos(aux1,2:4)];
-				pr_used = [pr_used;pr_corrected(aux2,2)+sat_pos(aux1,5)*const_c];
+	for aux1 = 1:size(satellites_pos,1)
+		for aux2 = 1:size(pr_filtered,1)
+			if satellites_pos(aux1,1) == pr_filtered(aux2,1)
+				satellites_used = [satellites_used; satellites_pos(aux1,2:4)];
+				pr_used = [pr_used;pr_filtered(aux2,2) + satellites_pos(aux1,5)*const_c];
 			end
 		end
 	end
-	
-	ref = last_pos';
 	satellites_used = satellites_used';
 	
 	e0result = []; h = []; z = []; xest = [];
@@ -41,6 +42,20 @@ global 	const_c
 
 		ref = xest(1:3);
         disp(norm(ref-last_pos'));
+		
+		satellites_pos = satellite_positions(input_eph,WN,TOW,ref',input_hui);
+		
+		satellites_used = [];
+		pr_used = [];
+		for aux1 = 1:size(satellites_pos,1)
+			for aux2 = 1:size(pr_filtered,1)
+				if satellites_pos(aux1,1) == pr_filtered(aux2,1)
+					satellites_used = [satellites_used; satellites_pos(aux1,2:4)];
+					pr_used = [pr_used;pr_filtered(aux2,2) + satellites_pos(aux1,5)*const_c];
+				end
+			end
+		end
+		satellites_used = satellites_used';
 	end
 	
 	xyz = ref;

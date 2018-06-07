@@ -30,9 +30,8 @@ end
 input_raw = load('test_data/ub1.ubx.1744.327600.raw');
 input_eph = load('test_data/ub1.ubx.1744.327600.eph');
 input_hui = load('test_data/ub1.ubx.1744.327600.hui');
-%% Calculating pseudo-ranges and satellite positions
 
-[satellites_pos] = satellite_positions(input_eph,WN,TOW,RF1,input_hui);
+%% Calculating pseudo-ranges
 
 pr_raw = zeros(50,2); pr_filtered = []; pr_line = [];
 
@@ -53,7 +52,7 @@ end
 
 % pr_filtered = [9 20536028.7375603;12 22166455.5048996;15 20444176.1682478;17 23963808.3735086;18 22366369.6169282;22 24915155.0699065;26 22419323.7026119;27 21167000.4665947];
 
-xyz = gnsspos_final(RF1,satellites_pos,pr_filtered);
+xyz = gnsspos_final(input_eph,input_hui,pr_filtered,WN,TOW,RF1);
 
 %% Overlap check
 

@@ -1,15 +1,16 @@
 %% Startup
 addpath('./generic_functions/');
 warning('off','backtrace');
-format longg
+
 const.a = 6378137;
 const.f = 1/298.257223563;
 const.c = 299792458;
 
 RF1 = [4918528.02 -791210.72 3969759.39];
+RF2 = [4918525.18 -791212.21 3969762.19];
 
 WN = 1744;
-TOW = 327796;
+TOW = 327793.6;
 
 % satellites_prerror = gs_error;
 
@@ -29,7 +30,13 @@ input_eph = load('test_data/ub1.ubx.1744.327600.eph');
 
 satellites_pos = satellite_positions(input_eph,WN,TOW,RF1);
 
-pr_raw = zeros(50,2); pr_filtered = []; pr_line = 13;
+pr_raw = zeros(50,2); pr_filtered = []; pr_line = [];
+
+for aux = 1:size(input_raw,1)
+	if (input_raw(aux,1) == TOW*1000) && isempty(pr_line)
+		pr_line = aux;
+	end
+end
 
 for aux = 1:50
 	pr_raw(aux,:) = [input_raw(pr_line,(aux - 1)*10 + 4) input_raw(pr_line,(aux - 1)*10 + 11)];
@@ -40,8 +47,7 @@ end
 
 %% Position based on pseudo-ranges and satellite positions
 
-% pr_filtered = [1 22008526.3942958;2 20164251.7162603;3 22130483.2263822;4 22046572.8415926;5 20883366.9715182];
-% satellites_test = [1 23954057.4169302 -11218474.0657221 -341693.401251755;2 20624126.3122062 -1195547.13253004 16800120.6658581;3 9603779.70052487 -18418364.6520372 16713889.9451206;4 22527224.2081114 12377924.0029190 6773448.60650130;5 14949962.2554318 -3754576.39522038 22183132.5866638];
+% pr_filtered = [9 20536028.7375603;12 22166455.5048996;15 20444176.1682478;17 23963808.3735086;18 22366369.6169282;22 24915155.0699065;26 22419323.7026119;27 21167000.4665947];
 
 xyz = gnsspos_final(RF1,satellites_pos,pr_filtered);
 

@@ -2,10 +2,14 @@
 addpath('./generic_functions/');
 warning('off','backtrace');
 
-const.a = 6378137;
-const.f = 1/298.257223563;
-const.c = 299792458;
-
+global const_a;
+const_a = 6378137;
+global const_f;
+const_f = 1/298.257223563;
+global const_c;
+const_c = 299792458;
+global const_F;
+const_F = - 4.442807633*(10^(-10));
 RF1 = [4918528.02 -791210.72 3969759.39];
 RF2 = [4918525.18 -791212.21 3969762.19];
 
@@ -25,10 +29,10 @@ end
 
 input_raw = load('test_data/ub1.ubx.1744.327600.raw');
 input_eph = load('test_data/ub1.ubx.1744.327600.eph');
-
+input_hui = load('test_data/ub1.ubx.1744.327600.hui');
 %% Calculating pseudo-ranges and satellite positions
 
-satellites_pos = satellite_positions(input_eph,WN,TOW,RF1);
+[satellites_pos] = satellite_positions(input_eph,WN,TOW,RF1);
 
 pr_raw = zeros(50,2); pr_filtered = []; pr_line = [];
 

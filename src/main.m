@@ -1,7 +1,7 @@
 %% Startup
 addpath('./generic_functions/');
 warning('off','backtrace');
-
+format longg
 const.a = 6378137;
 const.f = 1/298.257223563;
 const.c = 299792458;

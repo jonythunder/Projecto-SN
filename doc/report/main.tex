@@ -30,7 +30,7 @@
 	\Large Instituto Superior Técnico \\
 	Mestrado em Engenharia Aeroespacial \\
 	\vspace{1mm}
-	\large Gestão de Projetos
+	\large Sistemas de Navegação
 	
 	\vspace{10mm} % --  Espaço em branco
 	\Large Junho de 2018
@@ -114,14 +114,10 @@ O cálculo da intrusão num volume esférico com base em coordenadas
 ECEF foi de relativa facilidade, e foi consequentemente a primeira a
 ser implementada. Fornecendo um ponto $(x_c,y_c,z_c)$ para o centro
 da esfera e um raio $r$, para uma coordenada $(x_r,y_r,z_r)$
-fornecida pelo recetor, podemos formular
+fornecida pelo recetor, podemos formular que o ponto está dentro da 
+esfera se
 \begin{gather*}
-	\begin{dcases}
-		\text{Dentro} & \textrm{se}\quad \left\lVert(x_c,y_c,z_c) - 
-        	(x_r,y_r,z_r)\right\rVert \leq r \\
-		\text{Fora} & \textrm{se}\quad \left\lVert(x_c,y_c,z_c) - 
-        	(x_r,y_r,z_r)\right\rVert > r \\
-	\end{dcases}
+	\left\lVert(x_c,y_c,z_c) - (x_r,y_r,z_r)\right\rVert \leq r
 \end{gather*}
 
 \subsubsection{Cilindro}
@@ -129,9 +125,65 @@ fornecida pelo recetor, podemos formular
 A implementação do cilindro foi feita através de um ponto $(x_b,y_b,
 z_b)$ correspondente à base, um raio da base $r$, e uma altura $h$.
 A verificação da intrusão foi feita utilizando uma fatia circular do
-cilindro com a mesma altura em LLH.
+cilindro com a mesma altura em LLH. Utilizando o centro desta mesma fatia
+$(x_f,y_f,z_f)$, formula-se que o ponto está dentro do cilindro se
+\begin{gather*}
+	\left\lVert(x_f,y_f,z_f) - (x_r,y_r,z_r)\right\rVert \leq r
+\end{gather*}
 
 \subsubsection{Paralelepípedo}
+
+A última implementação foi a do paralelepípedo, que foi a menos trivial a
+realizar. O algoritmo de deteção utilizado requer um paralelepípedo
+ortonormado. Para tal, trabalhou-se no sistema de coordenadas ENU.
+Utilizando dois pontos $P_1$ e $P_3$ e a altura $h$ do
+paralelepípedo obtiveram-se oito pontos que definem o paralelepípedo,
+como se observa na figura \ref{fig:box}.
+
+%if dot(u_ENU,xyz_ENU)>=dot(u_ENU,corners_ENU(1,:)) && dot(u_ENU,xyz_ENU)<=dot(u_ENU,corners_ENU(2,:))
+%    if dot(v_ENU,xyz_ENU)>=dot(v_ENU,corners_ENU(1,:)) && dot(v_ENU,xyz_ENU)<=dot(v_ENU,corners_ENU(4,:))
+%        if dot(w_ENU,xyz_ENU)>=dot(w_ENU,corners_ENU(1,:)) && dot(w_ENU,xyz_ENU)<=dot(w_ENU,corners_ENU(5,:))
+
+\begin{figure}[ht]
+	\centering
+	\begin{tikzpicture}[ppoint/.style = {circle,draw,inner sep = 0pt, minimum size = 3pt}]
+		\node (p1) at (0,0) [ppoint,label = {135:$P_1$}] {};
+        \node (p2) at (1,1) [ppoint,label = {135:$P_2$}] {};
+        \node (p3) at (3,1) [ppoint,label = {135:$P_3$}] {};
+        \node (p4) at (2,0) [ppoint,label = {135:$P_4$}] {};
+        \node (p5) at (0,3) [ppoint,label = {135:$P_5$}] {};
+        \node (p6) at (1,4) [ppoint,label = {135:$P_6$}] {};
+        \node (p7) at (3,4) [ppoint,label = {135:$P_7$}] {};
+        \node (p8) at (2,3) [ppoint,label = {135:$P_8$}] {};
+        \draw (p1) -- (p5) -- (p6) -- (p7) -- (p3) -- (p4) -- (p1);
+        \draw (p5) -- (p8) -- (p7) (p8) -- (p4);
+        \draw [dashed] (p1) -- (p2) -- (p6) (p2) -- (p3);
+        \draw [<->] (p3) ++(0.5,0) -- node [auto,swap] {$h$} ++(0,3);
+	\end{tikzpicture}
+    \caption{Relação entre os pontos do paralelepípedo.}
+    \label{fig:box}
+\end{figure}
+
+Utilizando um ponto do recetor $P_r = (x_r,y_r,z_r)$, as condições de
+intrusão podem ser definidas extraindo três vetores $u$, $v$ e $y$ do
+paralelepípedo.
+\begin{gather*}
+	u = P_1 - P_2 \\
+    v = P_1 - P_4 \\
+    w = P_1 - P_5
+\end{gather*}
+
+Com isto definido, o ponto do recetor pode ser considerado dentro do
+paralelepípedo quando todas as condições das equações \ref{eq:box_condu},
+\ref{eq:box_condv} e \ref{eq:box_condw} são correspondidas.
+\begin{gather}
+	\label{eq:box_condu}
+	u \cdot P_1 \leq u \cdot P_r \leq u \cdot P_2 \\
+    \label{eq:box_condv}
+    v \cdot P_1 \leq v \cdot P_r \leq v \cdot P_4 \\
+    \label{eq:box_condw}
+    w \cdot P_1 \leq w \cdot P_r \leq w \cdot P_5
+\end{gather}
 
 \section{Implementação}
 

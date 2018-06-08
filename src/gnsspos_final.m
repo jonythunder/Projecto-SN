@@ -13,14 +13,7 @@ global	const
 	
 	satellites_used = [];
 	pr_used = [];
-	for aux1 = 1:size(satellites_pos,1)
-		for aux2 = 1:size(pr_filtered,1)
-			if satellites_pos(aux1,1) == pr_filtered(aux2,1)
-				satellites_used = [satellites_used; satellites_pos(aux1,2:4)];
-				pr_used = [pr_used;pr_filtered(aux2,2) + satellites_pos(aux1,5)*const.c];
-			end
-		end
-	end
+	[satellites_used,pr_used] = satellites_filter(satellites_pos,pr_filtered);
 	satellites_used = satellites_used';
 	
 	e0result = []; h = []; z = []; xest = [];
@@ -47,14 +40,7 @@ global	const
 		
 		satellites_used = [];
 		pr_used = [];
-		for aux1 = 1:size(satellites_pos,1)
-			for aux2 = 1:size(pr_filtered,1)
-				if satellites_pos(aux1,1) == pr_filtered(aux2,1)
-					satellites_used = [satellites_used; satellites_pos(aux1,2:4)];
-					pr_used = [pr_used;pr_filtered(aux2,2) + satellites_pos(aux1,5)*const.c];
-				end
-			end
-		end
+		[satellites_used,pr_used] = satellites_filter(satellites_pos,pr_filtered);
 		satellites_used = satellites_used';
 	end
 	
@@ -83,4 +69,38 @@ global	const
 	M_enu = (h_enu' * h_enu)^(-1);
 	HDOP = sqrt(trace(M_enu(1:2,1:2)));
 	VDOP = sqrt(M_enu(3,3));
+end
+
+function [satellites_out,pr_out] = satellites_filter(satellites_in,pr_in,ref)
+	global	const
+	
+	ref_llh = xyz2llh(ref,const.a,const.f);
+	
+% 	[satenu(1),satenu(2),satenu(3)] = ecef2enu(s(1),s(2),s(3),...
+% 		ref_llh(1),ref_llh(2),ref_llh(3),referenceEllipsoid('wgs84'),'radians');
+% 	satellites_enu(line_counter,:) = [s2dc(temp{1}), satenu];
+% 	satellites_enu_norm(line_counter,:) = [s2dc(temp{1}),...
+% 		satenu/(norm(ref - s))];
+% 	
+% 	az = atan2(satenu(1),satenu(2));
+% 	el = atan2(satenu(3),sqrt(satenu(1).^2 + satenu(2).^2));
+% 	satellites_azel(line_counter,:) = [s2dc(temp{1}), az, el];
+	
+	for aux = 1:size(satellites_in,1)
+		satellites_enu(aux,1) = satellites_in(aux,1);
+		[satellites_enu(aux,2),satellites_enu(aux,3),satellites_enu(aux,4)] = ecef2enu(satellites_in(aux,2),satellites_in(aux,3),satellites_in(aux,2),...
+			ref_llh(1),ref_llh(2),ref_llh(3),referenceEllipsoid('wgs84'),'radians');
+		az = atan2(satellites_enu(aux,2),satellites_enu(aux,3));
+		el = atan2(satellites_enu(aux,4),sqrt(satellites_enu(aux,2).^2 + satellites_enu(aux,3).^2));
+		satellites_azel(aux,:) = [satellites_in(aux,1) az el];
+	end
+	
+	for aux1 = 1:size(satellites_in,1)
+		for aux2 = 1:size(pr_in,1)
+			if (satellites_in(aux1,1) == pr_in(aux2,1)) && (satellites_azel(aux,3) > deg2rad(5))
+				satellites_out = [satellites_out; satellites_in(aux1,2:4)];
+				pr_out = [pr_out;pr_in(aux2,2) + satellites_in(aux1,5)*const.c];
+			end
+		end
+	end
 end

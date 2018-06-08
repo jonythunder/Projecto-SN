@@ -100,7 +100,7 @@ function [satellites_pos] = satellite_positions(input_eph,input_hui,WN,TOW,ref)
 			d = norm(s - ref);
 		end
 		delta_tsv = (const_F*(e^(input_eph(aux,34)))*sin(E))...
-        -input_eph(aux,18);%+input_hui(1,13)+input_hui(1,15)*(TOW-input_eph(aux,22))+input_hui(1,17)*(TOW-input_eph(aux,22))^2;
+        -input_eph(aux,18)+input_hui(1,13)+input_hui(1,15)*(TOW-input_eph(aux,22))+input_hui(1,17)*(TOW-input_eph(aux,22))^2;
 		satellites_pos(aux,:) = [input_eph(aux,1), s, delta_tsv];
 	end
 end

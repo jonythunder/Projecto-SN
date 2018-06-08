@@ -3,14 +3,14 @@ addpath('./generic_functions/');
 warning('off','backtrace');
 format longg
 clear
-global const_a;
-const_a = 6378137;
-global const_f;
-const_f = 1/298.257223563;
-global const_c;
-const_c = 299792458;
-global const_F;
-const_F = - 4.442807633*(10^(-10));
+global const;
+const.a = 6378137;
+const.f = 1/298.257223563;
+const.c = 299792458;
+const.F = - 4.442807633*(10^(-10));
+const.mu_e = 3.986005e+14;
+const.Omegadot_e = 7.2921151467e-5;
+
 RF1 = [4918528.02 -791210.72 3969759.39];
 RF2 = [4918525.18 -791212.21 3969762.19];
 

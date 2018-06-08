@@ -3,9 +3,8 @@
 % posições dos satélites
 function xyz = gnsspos_final(input_eph,input_hui,pr_filtered,WN,TOW,ref)
 	
-global	const_a
-global	const_f
-global 	const_c
+global	const
+
     
 	last_pos = ref;
 	ref = ref';
@@ -18,7 +17,7 @@ global 	const_c
 		for aux2 = 1:size(pr_filtered,1)
 			if satellites_pos(aux1,1) == pr_filtered(aux2,1)
 				satellites_used = [satellites_used; satellites_pos(aux1,2:4)];
-				pr_used = [pr_used;pr_filtered(aux2,2) + satellites_pos(aux1,5)*const_c];
+				pr_used = [pr_used;pr_filtered(aux2,2) + satellites_pos(aux1,5)*const.c];
 			end
 		end
 	end
@@ -52,7 +51,7 @@ global 	const_c
 			for aux2 = 1:size(pr_filtered,1)
 				if satellites_pos(aux1,1) == pr_filtered(aux2,1)
 					satellites_used = [satellites_used; satellites_pos(aux1,2:4)];
-					pr_used = [pr_used;pr_filtered(aux2,2) + satellites_pos(aux1,5)*const_c];
+					pr_used = [pr_used;pr_filtered(aux2,2) + satellites_pos(aux1,5)*const.c];
 				end
 			end
 		end
@@ -69,7 +68,7 @@ global 	const_c
 	PDOP = sqrt(trace(M(1:3,1:3)));
 	TDOP = sqrt(M(4,4));
 
-	xest_llh = xyz2llh(xest',const_a,const_f);
+	xest_llh = xyz2llh(xest',const.a,const.f);
 	satellites_used_enu = satellites_used;
 	for aux = 1:size(satellites_used,2)
 		[satellites_used_enu(1,aux),satellites_used_enu(2,aux),satellites_used_enu(3,aux)] = ecef2enu(satellites_used(1,aux),...

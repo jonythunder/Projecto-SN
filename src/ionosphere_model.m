@@ -10,11 +10,11 @@ position_llh=xyz2llh(position_xyz,const.a,const.f);
 
 
     %Get the satellite's elevation
-    for j=1:size(satellite_xyz,2)
+    for j=1:size(satellite_xyz,1)
         %Compute the receiver's position in LLH
-        satellite_llh=xyz2llh(satellite_xyz(:,j),const.a,const.f);
+        satellite_llh=xyz2llh(satellite_xyz(j,:),const.a,const.f);
 
-        satellite_ENU = ECEF2ENU((satellite_xyz(:,j)-position_xyz)',rad2deg(satellite_llh(1)),rad2deg(satellite_llh(2)));
+        satellite_ENU = ECEF2ENU((satellite_xyz(j,:)-position_xyz),rad2deg(satellite_llh(1)),rad2deg(satellite_llh(2)));
         [alpha_ENU,beta_ENU,gamma_ENU]=get_direction_cosines(satellite_ENU);
 
         az=atan2d(alpha_ENU,beta_ENU);
@@ -42,14 +42,14 @@ position_llh=xyz2llh(position_xyz,const.a,const.f);
         
         F=1+16*(0.53-el)^3;
         
-        PER=beta(0)+beta(1)*phi_m+beta(2)*phi_m^2+beta(3)*phi_m^3;
+        PER=beta(0+1)+beta(1+1)*phi_m+beta(2+1)*phi_m^2+beta(3+1)*phi_m^3;
         if PER < 72000
             PER=72000;
         end
         
         x=(2*pi*(t-50400))/PER;
         
-        AMP=alpha(0)+alpha(1)*phi_m+alpha(2)*phi_m^2+alpha(3)*phi_m^3;
+        AMP=alpha(0+1)+alpha(1+1)*phi_m+alpha(2+1)*phi_m^2+alpha(3+1)*phi_m^3;
         if AMP<0
             AMP=0;
         end

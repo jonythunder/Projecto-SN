@@ -4,6 +4,8 @@ function [troposphere_delay] = troposphere_model(position_xyz,satellite_xyz,WN,T
 %   the troposphere delay vector for all the pseudoranges using the model found in RTCA-MOPS, 2006
 
 global const
+time_years=(WN*7)/365.25+1980;
+time_days=floor((time_years-floor(time_years))*365.25+TOW/(24*3600))+5;
 
 
 time_years=(WN*7)/365.25+1980;
@@ -14,11 +16,11 @@ position_height=position_llh(3)-geoidheight(rad2deg(position_llh(1)),rad2deg(pos
 
 
 %Get the satellite's elevation
-for j=1:size(satellite_xyz,2)
+for j=1:size(satellite_xyz,1)
     %Compute the receiver's position in LLH
-    satellite_llh=xyz2llh(satellite_xyz(:,j),const.a,const.f);
+    satellite_llh=xyz2llh(satellite_xyz(j,:),const.a,const.f);
     
-    satellite_ENU = ECEF2ENU((satellite_xyz(:,j)-position_xyz)',rad2deg(satellite_llh(1)),rad2deg(satellite_llh(2)));
+    satellite_ENU = ECEF2ENU((satellite_xyz(j,:)-position_xyz),rad2deg(satellite_llh(1)),rad2deg(satellite_llh(2)));
     [~,~,gamma_ENU]=get_direction_cosines(satellite_ENU);
     
     el=asind(gamma_ENU);

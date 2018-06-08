@@ -13,7 +13,7 @@ global	const
 	
 	satellites_used = [];
 	pr_used = [];
-	[satellites_used,pr_used] = satellites_filter(satellites_pos,pr_filtered);
+	[satellites_used,pr_used] = satellites_filter(satellites_pos,pr_filtered,ref);
 	satellites_used = satellites_used';
 	
 	e0result = []; h = []; z = []; xest = [];
@@ -40,35 +40,35 @@ global	const
 		
 		satellites_used = [];
 		pr_used = [];
-		[satellites_used,pr_used] = satellites_filter(satellites_pos,pr_filtered);
+		[satellites_used,pr_used] = satellites_filter(satellites_pos,pr_filtered,ref);
 		satellites_used = satellites_used';
 	end
 	
 	xyz = ref;
 	
-	n = z - h * xest;
-	M = (h' * h)^(-1);
+% 	n = z - h * xest;
+% 	M = (h' * h)^(-1);
+% 
+% 	GDOP = sqrt(trace(M));
+% 
+% 	PDOP = sqrt(trace(M(1:3,1:3)));
+% 	TDOP = sqrt(M(4,4));
+% 
+% 	xest_llh = xyz2llh(xest',const.a,const.f);
+% 	satellites_used_enu = satellites_used;
+% 	for aux = 1:size(satellites_used,2)
+% 		[satellites_used_enu(1,aux),satellites_used_enu(2,aux),satellites_used_enu(3,aux)] = ecef2enu(satellites_used(1,aux),...
+% 			satellites_used(2,aux),satellites_used(3,aux),xest_llh(1),xest_llh(2),xest_llh(3),referenceEllipsoid('wgs84'),'radians');
+% 	end
 
-	GDOP = sqrt(trace(M));
-
-	PDOP = sqrt(trace(M(1:3,1:3)));
-	TDOP = sqrt(M(4,4));
-
-	xest_llh = xyz2llh(xest',const.a,const.f);
-	satellites_used_enu = satellites_used;
-	for aux = 1:size(satellites_used,2)
-		[satellites_used_enu(1,aux),satellites_used_enu(2,aux),satellites_used_enu(3,aux)] = ecef2enu(satellites_used(1,aux),...
-			satellites_used(2,aux),satellites_used(3,aux),xest_llh(1),xest_llh(2),xest_llh(3),referenceEllipsoid('wgs84'),'radians');
-	end
-
-	for aux = 1:size(satellites_used,2)
-		e0_enu = (satellites_used_enu(:,aux))/norm(satellites_used_enu(:,aux));
-		h_enu(aux,1:4) = [-e0_enu' 1];
-	end
-
-	M_enu = (h_enu' * h_enu)^(-1);
-	HDOP = sqrt(trace(M_enu(1:2,1:2)));
-	VDOP = sqrt(M_enu(3,3));
+% 	for aux = 1:size(satellites_used,2)
+% 		e0_enu = (satellites_used_enu(:,aux))/norm(satellites_used_enu(:,aux));
+% 		h_enu(aux,1:4) = [-e0_enu' 1];
+% 	end
+% 
+% 	M_enu = (h_enu' * h_enu)^(-1);
+% 	HDOP = sqrt(trace(M_enu(1:2,1:2)));
+% 	VDOP = sqrt(M_enu(3,3));
 end
 
 function [satellites_out,pr_out] = satellites_filter(satellites_in,pr_in,ref)
@@ -94,7 +94,7 @@ function [satellites_out,pr_out] = satellites_filter(satellites_in,pr_in,ref)
 		el = atan2(satellites_enu(aux,4),sqrt(satellites_enu(aux,2).^2 + satellites_enu(aux,3).^2));
 		satellites_azel(aux,:) = [satellites_in(aux,1) az el];
 	end
-	
+	satellites_out = []; pr_out = [];
 	for aux1 = 1:size(satellites_in,1)
 		for aux2 = 1:size(pr_in,1)
 			if (satellites_in(aux1,1) == pr_in(aux2,1)) && (satellites_azel(aux,3) > deg2rad(5))

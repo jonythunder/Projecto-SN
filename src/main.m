@@ -60,12 +60,12 @@ end
 xyz = gnsspos_final(input_eph,input_hui,pr_filtered,WN,TOW,RF1);
 
 
-%%
-% pr_raw2 = zeros(50,2); pr_filtered2 = []; pr_line2 = [];
-% 
-% sat_pos  = satellite_positions(input_eph,input_hui,WN,TOW,RF1);
-% sat_pr_error = gs_error(sat_pos,pr_filtered,RF1);
-% 
+
+pr_raw2 = zeros(50,2); pr_filtered2 = []; pr_line2 = [];
+
+sat_pos  = satellite_positions(input_eph,input_hui,WN,TOW,RF1);
+sat_pr_error = gs_error(sat_pos,pr_filtered,RF1);
+
 % for aux = 1:size(input_raw2,1)
 % 	if (input_raw2(aux,1) == TOW*1000) && isempty(pr_line2)
 % 		pr_line2 = aux;
@@ -79,17 +79,17 @@ xyz = gnsspos_final(input_eph,input_hui,pr_filtered,WN,TOW,RF1);
 % 	end
 % end
 % 
-% % for i=1:size(pr_filtered,1)
-% %     for j=1:size(sat_pr_error,1)
-% %         if pr_filtered(i,1) == sat_pr_error(j,1)
-% %             pr_filtered(i,2) = pr_filtered(i,2) - sat_pr_error(j,2);
-% %         end
-% %     end
-% % end
+%  for i=1:size(pr_filtered2,1)
+%     for j=1:size(sat_pr_error,1)
+%         if pr_filtered2(i,1) == sat_pr_error(j,1)
+%             pr_filtered2(i,2) = pr_filtered2(i,2) - sat_pr_error(j,2);
+%         end
+%     end
+% end
 % 
 % xyz2 = gnsspos_final(input_eph2,input_hui2,pr_filtered2,WN,TOW,RF1);
 %  
-% disp(norm(xyz-xyz2));
+% disp(norm(RF1-xyz2));
 %% Overlap check
 
 % count = 0; triggered_lines = [];

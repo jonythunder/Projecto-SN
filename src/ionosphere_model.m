@@ -60,7 +60,7 @@ position_llh=xyz2llh(position_xyz,const.a,const.f);
             delay=F*5*10^(-9);
         end
         
-        ionosphere_delay(j)=delay;
+        ionosphere_delay(j)=delay*const.c;
     end
 end
 

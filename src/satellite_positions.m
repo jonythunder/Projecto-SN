@@ -98,10 +98,13 @@ function [satellites_pos] = satellite_positions(input_eph,input_hui,WN,TOW,ref)
         
         alpha = [input_hui(1,13),input_hui(1,15),input_hui(1,17),input_hui(1,19)];
         beta = [input_hui(1,21),input_hui(1,23),input_hui(1,25),input_hui(1,27)];
+        tropo = troposphere_model(ref,s,WN,TOW);
+        iono = ionosphere_model(alpha,beta,ref,s,t_tx);
+        t1 =(const.F*(e^(input_eph(aux,34)))*sin(E));
+        t2 = input_eph(aux,18);
+		t3 = input_hui(1,13)+(input_hui(1,15)*(t_tx-input_eph(aux,22)))+(input_hui(1,17)*((t_tx-input_eph(aux,22))^(2)));
         
-		delta_tsv = (const.F*(e^(input_eph(aux,34)))*sin(E))...
-        -input_eph(aux,18)+input_hui(1,13)+input_hui(1,15)*(t_tx-input_eph(aux,22))+input_hui(1,17)...
-        *(t_tx-input_eph(aux,22))^2-troposphere_model(ref,s,WN,TOW)-ionosphere_model(alpha,beta,ref,s,TOW);
+        delta_tsv = t1-t2+t3-tropo-iono;
     
 		satellites_pos(aux,:) = [input_eph(aux,1), s, delta_tsv];
 	end

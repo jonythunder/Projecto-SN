@@ -104,7 +104,7 @@ function [satellites_pos] = satellite_positions(input_eph,input_hui,WN,TOW,ref)
         t2 = input_eph(aux,18);
 		t3 = input_hui(1,13)+(input_hui(1,15)*(t_tx-input_eph(aux,22)))+(input_hui(1,17)*((t_tx-input_eph(aux,22))^(2)));
         
-        delta_tsv = t1-t2+t3-tropo-iono;
+        delta_tsv = t1-t2+t3-iono;%-tropo;
     
 		satellites_pos(aux,:) = [input_eph(aux,1), s, delta_tsv];
 	end

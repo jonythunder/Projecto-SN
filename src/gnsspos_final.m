@@ -99,7 +99,7 @@ function [satellites_out,pr_out] = satellites_filter(satellites_in,pr_in,ref)
 		for aux2 = 1:size(pr_in,1)
 			if (satellites_in(aux1,1) == pr_in(aux2,1)) && (satellites_azel(aux,3) > deg2rad(5))
 				satellites_out = [satellites_out; satellites_in(aux1,2:4)];
-				pr_out = [pr_out;pr_in(aux2,2) + satellites_in(aux1,5)*const.c];
+				pr_out = [pr_out;pr_in(aux2,2)+ satellites_in(aux1,5)];%*const.c];
 			end
 		end
 	end

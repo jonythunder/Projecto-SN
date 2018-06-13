@@ -102,7 +102,9 @@ function [satellites_pos] = satellite_positions(input_eph,input_hui,WN,TOW,ref)
         iono = ionosphere_model(alpha,beta,ref,s,t_tx);
         tr =(const.F*(e^(input_eph(aux,34)))*sin(E))*const.c;
         tgd = input_eph(aux,18)*const.c;
-		t_poly = (input_hui(1,13)+(input_hui(1,15)*(t_tx-input_eph(aux,22)))+(input_hui(1,17)*((t_tx-input_eph(aux,22))^(2))))*const.c;
+		t_poly_seconds = input_eph(aux,31)+input_eph(aux,28)*(t_tx-input_eph(aux,22))+ input_eph(aux,25)*(t_tx-input_eph(aux,22)).^2;
+
+		t_poly=t_poly_seconds*const.c;
         
         delta_tsv = tr-tgd+t_poly-iono-tropo;
     

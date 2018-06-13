@@ -17,8 +17,8 @@ global	const
 	satellites_used = satellites_used';
 	
 	e0result = []; h = []; z = []; xest = [];
-	
-	while 1
+	valid = true;
+	while valid
 		for aux = 1:size(satellites_used,2)
 			e0 = (satellites_used(:,aux) - ref)/norm(satellites_used(:,aux) - ref);
 			e0result = [e0result e0];
@@ -30,7 +30,7 @@ global	const
 		
 		if norm(xest(1:3) - ref) < 0.001
 	 		ref = xest(1:3);
-	 		break;
+	 		valid=false;
 	 	end
 
 		ref = xest(1:3);

@@ -41,31 +41,34 @@
 \section{Objectivo}
 
 O objetivo do projeto é a implementação de um sistema de
-posicionamento
+posicionamento global derivado do GPS com correções baseadas em
+estações locais, um sistema comummente apelidado de GPS diferencial,
+ou DGPS, e a utilização desse mesmo sistema para detetar intrusão em
+áreas pré-especificadas.
 
-\section{GPS Diferencial}
+\section{Funcionamento}
 
 Neste projeto implementámos melhoramentos de GPS através do método
 conhecido como GPS diferencial. GPS diferencial é um sistema para
 corrigir a posição retornada por um recetor GPS convencional. Este
 sistema utiliza um recetor de posição fixa pré-determinada para
-calcular erros nos \textit{pseudo-ranges} em tempo real.
+calcular erros nos \textit{pseudoranges} em tempo real.
 
-\subsection{Funcionamento}
+\subsection{GPS Diferencial}
 
-A correção é realizada nos valores dos \textit{pseudo-ranges}
+A correção é realizada nos valores dos \textit{pseudoranges}
 calculados pelo recetor local através dos satélites do sistema GPS.
 Estes erros, que advêm do facto da influência da atmosfera no sinal
 de GPS não ser constante, são calculados pela diferença dos
-\textit{pseudo-ranges} da estação fixa e a distância real desta aos
+\textit{pseudoranges} da estação fixa e a distância real desta aos
 satélites, cuja posição é conhecida pois esta está presente no sinal
 de GPS. Uma vez calculados estes erros, estes são transmitidos ao
-recetor local e subtraídos aos \textit{pseudo-ranges} calculados por
+recetor local e subtraídos aos \textit{pseudoranges} calculados por
 este. Calcula-se então a posição utilizando o método de GPS, mas
-utilizando desta vez os \textit{pseudo-ranges} corrigidos.
+utilizando desta vez os \textit{pseudoranges} corrigidos.
 
 Sendo $d_{GS}$ a distância entre o satélite $N$ e a
-estação local, e $\rho_{GS}$ o \textit{pseudo-range} obtido nesta, temos,
+estação local, e $\rho_{GS}$ o \textit{pseudorange} obtido nesta, temos,
 para cada satélite, o erro $e$ na equação \ref{sat_error}.
 \begin{gather} \label{sat_error}
 	\left[\begin{matrix}
@@ -81,7 +84,7 @@ para cada satélite, o erro $e$ na equação \ref{sat_error}.
         d^{(N)}_{GS} - \rho^{(N)}_{GS} \\
 	\end{matrix}\right]
 \end{gather}
-Sendo $\rho^{(N)}_{r}$ o \textit{pseudo-range} obtido pelo receptor local, temos $\rho*_r $ como o valor corrigido para o receptor local do \textit{pseudo-range}, na equação \ref{new_range}.
+Sendo $\rho^{(N)}_{r}$ o \textit{pseudorange} obtido pelo receptor local, temos $\rho*_r $ como o valor corrigido para o receptor local do \textit{pseudorange}, na equação \ref{new_range}.
 \begin{gather} \label{new_range}
 	\left[\begin{matrix}
 		\rho*^{(1)}_r \\
@@ -96,5 +99,49 @@ Sendo $\rho^{(N)}_{r}$ o \textit{pseudo-range} obtido pelo receptor local, temos
         \rho^{(N)}_{r} - e^{(N)} \\
 	\end{matrix}\right]
 \end{gather}
-Com estes novos \textit{pseudo-ranges} podemos calcular a posição do receptor local da mesma forma que seria calculada no caso de GPS normal.
+Com estes novos \textit{pseudoranges} podemos calcular a posição do receptor local da mesma forma que seria calculada no caso de GPS normal.
+
+\subsection{Verificação de Intrusão de Área}
+
+Para determinar a intrusão de um ponto em áreas restritas, foram
+formuladas equações com base nas coordenadas ECEF calculadas pelo
+DGPS. Estas equações foram formuladas para três tipos de volumes
+geométricos distintos: esfera, cilindro e paralelepípedo (caixa).
+
+\subsubsection{Esfera}
+
+O cálculo da intrusão num volume esférico com base em coordenadas
+ECEF foi de relativa facilidade, e foi consequentemente a primeira a
+ser implementada. Fornecendo um ponto $(x_c,y_c,z_c)$ para o centro
+da esfera e um raio $r$, para uma coordenada $(x_r,y_r,z_r)$
+fornecida pelo recetor, podemos formular
+\begin{gather*}
+	\begin{dcases}
+		\text{Dentro} & \textrm{se}\quad \left\lVert(x_c,y_c,z_c) - 
+        	(x_r,y_r,z_r)\right\rVert \leq r \\
+		\text{Fora} & \textrm{se}\quad \left\lVert(x_c,y_c,z_c) - 
+        	(x_r,y_r,z_r)\right\rVert > r \\
+	\end{dcases}
+\end{gather*}
+
+\subsubsection{Cilindro}
+
+A implementação do cilindro foi feita através de um ponto $(x_b,y_b,
+z_b)$ correspondente à base, um raio da base $r$, e uma altura $h$.
+A verificação da intrusão foi feita utilizando uma fatia circular do
+cilindro com a mesma altura em LLH.
+
+\subsubsection{Paralelepípedo}
+
+\section{Implementação}
+
+A implementação do DGPS foi realizada com recurso ao MATLAB,
+reutilizando parte do código desenvolvido ao longo do semestre nas
+aulas da unidade curricular. Numa instância inicial, foram
+utilizados dados fornecidos pelo professor para as posições dos
+satélites e para os \textit{pseudoranges} de alguns satélites,
+obtidos através da estação GNSS colocada no topo do Instituto de
+Telecomunicações, como descrita no documento
+\texttt{AntennaSurvey.pdf}.
+
 \end{document}

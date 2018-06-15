@@ -1,6 +1,10 @@
 function [troposphere_delay] = troposphere_model(position_xyz,satellite_xyz,time_days)
 %TROPOSPHERE_MODEL Computes the troposphere delay
+<<<<<<< HEAD
 %   Given a receiver's position (in WGS84, [x,y,z]), the day of the year and the satellite positions (in WGS84, , computes
+=======
+%   Given a receiver's position (in LLH), the day of the year and the satellite positions, computes
+>>>>>>> b2a0de2579e75ab43ecc61f5b857423b1ddfb8ac
 %   the troposphere delay vector for all the pseudoranges using the model found in RTCA-MOPS, 2006
 
 global const

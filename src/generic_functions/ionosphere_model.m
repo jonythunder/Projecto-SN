@@ -31,7 +31,11 @@ position_llh=xyz2llh(position_xyz,const.a,const.f);
         
         lambda_i=position_llh(2)+(psi*sin(az))/cos(phi_i);
         
+<<<<<<< HEAD
         t=(4.32*10^4)*lambda_i+gps_time(j);
+=======
+        t=(4.32*10^4)*lambda_i+gps_time;
+>>>>>>> b2a0de2579e75ab43ecc61f5b857423b1ddfb8ac
         if t>=86400
             t=t-86400;
         elseif t<0
@@ -42,14 +46,22 @@ position_llh=xyz2llh(position_xyz,const.a,const.f);
         
         F=1+16*(0.53-el)^3;
         
+<<<<<<< HEAD
         PER=beta(1)+beta(2)*phi_m+beta(3)*phi_m^2+beta(4)*phi_m^3;
+=======
+        PER=beta(0)+beta(1)*phi_m+beta(2)*phi_m^2+beta(3)*phi_m^3;
+>>>>>>> b2a0de2579e75ab43ecc61f5b857423b1ddfb8ac
         if PER < 72000
             PER=72000;
         end
         
         x=(2*pi*(t-50400))/PER;
         
+<<<<<<< HEAD
         AMP=alpha(1)+alpha(2)*phi_m+alpha(3)*phi_m^2+alpha(4)*phi_m^3;
+=======
+        AMP=alpha(0)+alpha(1)*phi_m+alpha(2)*phi_m^2+alpha(3)*phi_m^3;
+>>>>>>> b2a0de2579e75ab43ecc61f5b857423b1ddfb8ac
         if AMP<0
             AMP=0;
         end

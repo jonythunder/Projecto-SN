@@ -30,7 +30,10 @@ end
 input_raw = load('test_data/ub1.ubx.1744.327600.raw');
 input_eph = load('test_data/ub1.ubx.1744.327600.eph');
 input_hui = load('test_data/ub1.ubx.1744.327600.hui');
+<<<<<<< HEAD
 tic
+=======
+>>>>>>> b2a0de2579e75ab43ecc61f5b857423b1ddfb8ac
 
 %% Calculating pseudo-ranges
 
@@ -65,6 +68,7 @@ xyz = gnsspos_final(input_eph,input_hui,pr_filtered,WN,TOW,RF1);
 % 		triggered_lines = [triggered_lines aux];
 % 	end
 % end
+<<<<<<< HEAD
 
 % [overlap,area] = overlap_check(xyz);
 % if overlap
@@ -72,3 +76,10 @@ xyz = gnsspos_final(input_eph,input_hui,pr_filtered,WN,TOW,RF1);
 % end
 
 toc
+=======
+
+% [overlap,area] = overlap_check(xyz);
+% if overlap
+% 	warning('Current location is overlapping area %d.',area);
+% end
+>>>>>>> b2a0de2579e75ab43ecc61f5b857423b1ddfb8ac

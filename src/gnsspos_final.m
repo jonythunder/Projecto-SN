@@ -7,6 +7,7 @@ global	const_a
 global	const_f
 global 	const_c
     
+	last_pos = ref;
 	ref = ref';
 	
 	satellites_pos = satellite_positions(input_eph,input_hui,WN,TOW,ref');
@@ -43,7 +44,7 @@ global 	const_c
 		ref = xest(1:3);
         disp(norm(ref-last_pos'));
 		
-		satellites_pos = satellite_positions(input_eph,WN,TOW,ref',input_hui);
+		satellites_pos = satellite_positions(input_eph,input_hui,WN,TOW,ref');
 		
 		satellites_used = [];
 		pr_used = [];

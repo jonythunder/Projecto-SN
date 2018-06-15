@@ -30,6 +30,7 @@ end
 input_raw = load('test_data/ub1.ubx.1744.327600.raw');
 input_eph = load('test_data/ub1.ubx.1744.327600.eph');
 input_hui = load('test_data/ub1.ubx.1744.327600.hui');
+tic
 
 %% Calculating pseudo-ranges
 
@@ -69,3 +70,5 @@ xyz = gnsspos_final(input_eph,input_hui,pr_filtered,WN,TOW,RF1);
 % if overlap
 % 	warning('Current location is overlapping area %d.',area);
 % end
+
+toc

@@ -26,7 +26,7 @@ function [ifoverlap, overlap_areas] = overlap_check(xyz)
 								102],const.a,const.f); % -- xyz, meters
 	area2.bottom_llh = ([	dirchk(dms2rad([38,44,12.46]),'N')...
 								dirchk(dms2rad([9,08,18.91]),'W')...
-								102],const.a,const.f); % -- xyz, meters
+								102]); % -- xyz, meters
 
 
 

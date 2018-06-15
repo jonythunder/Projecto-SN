@@ -240,9 +240,7 @@ function [eph]=parse_AID_EPH(bitstream)
     delta_n_bin=word_bin(1:16);
     eph(36)=bin2dec(delta_n_bin(2:end))*(-1)^delta_n_bin(1);
     eph(35)=sprintf('0x%04s',dec2base(bin2dec(delta_n_bin),16));
-    %Convert semicircles/s to radians/s
-    
-    eph(37)=sprintf("%.11e",str2double(delta_n_aux)*2^-43);
+    eph(37)=sprintf("%.11e",semicircles2rad(str2double(eph(36)))*2^-(43-31));
     %Get first 8 bits of M0
     M0_bin_aux=word_bin(17:24);
     
@@ -255,7 +253,7 @@ function [eph]=parse_AID_EPH(bitstream)
     M0_bin=[M0_bin_aux,word_bin(1:24)];
     eph(39)=bin2dec(M0_bin(2:end))*(-1)^M0_bin(1);
     eph(38)=sprintf('0x%08s',dec2base(bin2dec(M0_bin),16));
-    eph(40)=sprintf("%.11e",str2double(eph(39))*2^-31);
+    eph(40)=sprintf("%.11e",semicircles2rad(str2double(eph(39)))*2^-(31-31));
     
     %Word 6
     word_hex_aux=bitstream(53:56,:);

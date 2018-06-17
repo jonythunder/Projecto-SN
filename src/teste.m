@@ -20,7 +20,7 @@ WN = 1744;
 TOW=(327839601/1000);
 
 
-
+error_history = [];
 
 
 % satellites_prerror = gs_error;
@@ -62,11 +62,22 @@ end
 
 pr_raw = zeros(50,2); pr_filtered = []; pr_line = 18;
 
+history_size_eph_aux = [];
+history_size_eph_masked = [];
+history_size_pr_masked = [];
+history_eph_masked = zeros(size(input_raw,1),8);
+history_pr_masked = zeros(size(input_raw,1),8);
+
+
+
+history = 1;
+
+
 xyz_history=[];
 llh_history=[];
 pr_history=[];
 
-for pr_line=1:5:size(input_raw,1)
+for pr_line=1:size(input_raw,1)
     
 TOW=input_raw(pr_line,1)/1000;
 WN=input_raw(pr_line,2);
@@ -92,13 +103,17 @@ for i=1:size(pr_filtered,1)
     for n=1:size(eph,1)
         for j=1:size(eph,1)
             
-        if eph(j,1)==SVN && eph(n,1)==SVN && j~=n
+            if pr_line==464
+                pr_line=464;
+            end
+            
+        if eph(j,1)==SVN && eph(n,1)==SVN && j~=n 
                 if (TOW+WN*604800)-(eph(j,4)+eph(j,6)*604800) < (TOW+WN*604800)-(eph(n,4)+eph(n,6)*604800)
                     eph_aux=[eph_aux;eph(j,:)];
                 else
                     eph_aux=[eph_aux;eph(n,:)];
                 end
-        elseif eph(j,1)==SVN && eph(n,1)==SVN && j==n
+        elseif eph(j,1)==SVN && eph(n,1)==SVN && j==n 
             eph_aux=[eph_aux;eph(j,:)];
         end                   
         end
@@ -126,6 +141,13 @@ end
 initial_estimate=[RF1,0];
 stop=true;
 
+satellites_pos=[];
+satellites_ttx=[];
+satellites_E=[];
+satellites_e=[];
+eph_masked=[];
+pr_masked=[];
+
 while stop
     nsats=size(eph_aux,1);
     t=TOW;
@@ -141,7 +163,7 @@ while stop
         az=atan2d(alpha_ENU,beta_ENU);
         el=asind(gamma_ENU);
         
-        if el>10
+        if el>5
             satellites_pos(n,:)=S';
             satellites_ttx(n,:)=t_tx;
             satellites_E(n,:)=E;
@@ -200,31 +222,56 @@ llh_out=xyz2llh(xyz(1:3),const.a,const.f);
 llh_out(1:2)=rad2deg(llh_out(1:2));
 xyz_history=[xyz_history;xyz(1:3)'];
 llh_history=[llh_history;llh_out];
-history_eph_aux = [history_eph_aux;eph_aux(
+error_history = [error_history,norm(RF1-xyz(1:3)')];
 
+if size(eph_masked,1) == 6
+    history_eph_masked(history,:) = [eph_masked(1,1),eph_masked(2,1),eph_masked(3,1),eph_masked(4,1),eph_masked(5,1),eph_masked(6,1),0,0];
+elseif size(eph_masked,1) == 7
+    history_eph_masked(history,:) = [eph_masked(1,1),eph_masked(2,1),eph_masked(3,1),eph_masked(4,1),eph_masked(5,1),eph_masked(6,1),eph_masked(7,1),0];
+elseif size(eph_masked,1) == 8
+    history_eph_masked(history,:) = [eph_masked(1,1),eph_masked(2,1),eph_masked(3,1),eph_masked(4,1),eph_masked(5,1),eph_masked(6,1),eph_masked(7,1),eph_masked(8,1)];
+end
+
+% if size(pr_masked,1) == 6
+%     history_pr_masked(history,:) = [pr_masked(:,1)',0,0];
+% elseif size(pr_masked,1) == 7
+%     history_pr_masked(history,:) = [pr_masked(:,1)',0];
+% elseif size(pr_masked,1) == 8
+%     history_pr_masked(history,:) = [pr_masked(:,1)'];
+% end
+    
+    
+history_size_eph_masked(history) = size(eph_masked,1);
+history_size_pr_masked(history) = size(pr_masked,1);
+history = history+1;
 
 end
 
 figure
-plot(1:5:pr_line,llh_history(:,1))
+plot(1:pr_line,llh_history(:,1))
 title('latitude history')
 figure
-plot(1:5:pr_line,llh_history(:,2))
+plot(1:pr_line,llh_history(:,2))
 title('longitude history')
 figure
-plot(1:5:pr_line,llh_history(:,3))
+plot(1:pr_line,llh_history(:,3))
 title('altitude history')
 figure
-plot(1:5:pr_line,RF1(1)-xyz_history(:,1))
+plot(1:pr_line,RF1(1)-xyz_history(:,1))
 title('X history')
 figure
-plot(1:5:pr_line,RF1(2)-xyz_history(:,2))
+plot(1:pr_line,RF1(2)-xyz_history(:,2))
 title('Y history')
 figure
-plot(1:5:pr_line,RF1(3)-xyz_history(:,3))
+plot(1:pr_line,RF1(3)-xyz_history(:,3))
 title('Z history')
-
-
+figure
+plot(1:pr_line,error_history)
+title('Error History')
+% plot(1:5:pr_line,history_size_eph_masked)
+% hold on
+% plot(1:5:pr_line,history_size_pr_masked)
+% 
 
 function [d_sv]=calculate_clock_bias(t_tx,input_eph,e,E)
 

@@ -89,12 +89,23 @@ end
 eph_aux=[];
 for i=1:size(pr_filtered,1)
     SVN=pr_filtered(i,1);
-    for j=1:size(eph,1)
-        if eph(j,1)==SVN
+    for n=1:size(eph,1)
+        for j=1:size(eph,1)
+            
+        if eph(j,1)==SVN && eph(n,1)==SVN && j~=n
+                if (TOW+WN*604800)-(eph(j,4)+eph(j,6)*604800) < (TOW+WN*604800)-(eph(n,4)+eph(n,6)*604800)
+                    eph_aux=[eph_aux;eph(j,:)];
+                else
+                    eph_aux=[eph_aux;eph(n,:)];
+                end
+        elseif eph(j,1)==SVN && eph(n,1)==SVN && j==n
             eph_aux=[eph_aux;eph(j,:)];
+        end                   
+
         end
     end
 end
+
 
 %satellites_pos = satellite_positions(eph_aux,WN,TOW,RF1');
 
@@ -203,13 +214,13 @@ figure
 plot(1:5:pr_line,llh_history(:,3))
 title('altitude history')
 figure
-plot(1:5:pr_line,xyz_history(:,1))
+plot(1:5:pr_line,RF1(1)-xyz_history(:,1))
 title('X history')
 figure
-plot(1:5:pr_line,xyz_history(:,2))
+plot(1:5:pr_line,RF1(2)-xyz_history(:,2))
 title('Y history')
 figure
-plot(1:5:pr_line,xyz_history(:,3))
+plot(1:5:pr_line,RF1(3)-xyz_history(:,3))
 title('Z history')
 
 

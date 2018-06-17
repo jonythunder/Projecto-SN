@@ -35,8 +35,11 @@ end
 [input_nmea_test] = parse_NMEA(fin);
 
 input_raw = load('test_data/ub1.ubx.1744.327600.raw');
+input_raw = input_raw(1:17032,:); % File has duplicated data
 input_eph = load('test_data/ub1.ubx.1744.327600.eph');
+input_eph = input_eph(1:38,:); % File has duplicated data
 input_hui = load('test_data/ub1.ubx.1744.327600.hui');
+input_hui = input_hui(1,:); % File has duplicated data
 
 alpha = [input_hui(1,13),input_hui(1,15),input_hui(1,17),input_hui(1,19)];
 beta = [input_hui(1,21),input_hui(1,23),input_hui(1,25),input_hui(1,27)];

@@ -9,7 +9,7 @@ const.c = 299792458;
 const.F = - 4.442807633*(10^(-10));
 const.mu_e = 3.986005e+14;
 const.Omegadot_e = 7.2921151467e-5;
-
+addpath('./test_functions/');
 addpath('./generic_functions/');
 warning('off','backtrace');
 
@@ -101,7 +101,6 @@ for i=1:size(pr_filtered,1)
         elseif eph(j,1)==SVN && eph(n,1)==SVN && j==n
             eph_aux=[eph_aux;eph(j,:)];
         end                   
-
         end
     end
 end
@@ -201,6 +200,8 @@ llh_out=xyz2llh(xyz(1:3),const.a,const.f);
 llh_out(1:2)=rad2deg(llh_out(1:2));
 xyz_history=[xyz_history;xyz(1:3)'];
 llh_history=[llh_history;llh_out];
+history_eph_aux = [history_eph_aux;eph_aux(
+
 
 end
 

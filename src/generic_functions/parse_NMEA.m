@@ -8,9 +8,9 @@ points=[];
 while ischar(line)
     switch line(2:6)
         case ('GPGGA')
-            [UTC,~,~,Lat_deg,~,~,Lon_deg,Quality,~,~,h_msl,~,~,~,~,~,checksum] = parse_GGA(line);
+            [UTC,~,~,Lat_deg,~,~,Lon_deg,Quality,~,~,h_msl,~,h_g,~,~,~,checksum] = parse_GGA(line);
             i=i+1;
-            points(i,:)=[Lat_deg,Lon_deg,h_msl,UTC];
+            points(i,:)=[Lat_deg,Lon_deg,h_msl+h_g,UTC];
             
         case ('GPGLL')
         %    [Lat1,Lat2,Lat_deg,Lon1,Lon2,Lon_deg,UTC,Status,Mode,checksum] = parse_GLL(line);

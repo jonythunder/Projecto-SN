@@ -9,7 +9,7 @@ beta = [input_hui(1,21),input_hui(1,23),input_hui(1,25),input_hui(1,27)];
 error_history = [];
 
 %Index all seen satellites
-
+satellites_pos_out = [];
     
     
   
@@ -48,7 +48,7 @@ error_history = [];
                 pr_masked(n,:)=pr_filtered(j,:);
                 n=n+1;
             end
-            
+            satellites_pos_out=[satellites_pos_out;SV_aux,S'];
             
         end
         d_sv=calculate_clock_bias(satellites_ttx,eph_masked,satellites_e,satellites_E);
@@ -59,7 +59,7 @@ error_history = [];
         pr_corrected(:,2)=pr_corrected(:,2)+d_sv';
         
         [xyz,satellites_pos,niter_LS]=ls_estimation(pr_corrected(:,2),satellites_pos(:,1:3),initial_estimate);
-        satellites_pos_out(n,:)=[SV_aux,S'];
+        
         
         
         tropospheric_delay=troposphere_model(xyz(1:3),satellites_pos(:,1:3)',time_days); %in meters
@@ -69,8 +69,9 @@ error_history = [];
         
         
         if abs(norm(xyz(1:3)'-initial_estimate(1:3)))<10^-3
-            stop=false;
+            break;
         end
+        satellites_pos_out = [];
         initial_estimate=xyz';       
     end
  xyz=xyz(1:3)';
@@ -90,7 +91,6 @@ for aux=1:size(input_eph,1)
     tr(aux) =(const.F*(e(aux)^(input_eph(aux,34)))*sin(E(aux)))*const.c;
     tgd(aux) = input_eph(aux,18)*const.c;
     t_poly_seconds(aux) = input_eph(aux,31)+input_eph(aux,28).*(t_tx(aux)-input_eph(aux,22))+ input_eph(aux,25).*(t_tx(aux)-input_eph(aux,22)).^2;
-    
     t_poly(aux)=t_poly_seconds(aux).*const.c;
 end
 

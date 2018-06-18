@@ -94,7 +94,8 @@ elseif size(input_raw,1) < size(input_raw2,1)
 end
 
 
-
+xyz_last = [];
+xyz2_last = [];
 
 for pr_line=1:size(input_raw,1)
     TOW=input_raw(pr_line,1)/1000;
@@ -131,7 +132,27 @@ for pr_line=1:size(input_raw,1)
     
     
     base_pos = 0;
+    
     [xyz,sat_pos,clock_bias,d_sv]=calc_position(input_hui,eph_aux,input_eph,TOW,WN,pr_filtered);
+    
+    [H] = get_H(pr_filtered(:,2),sat_pos(:,2:4),xyz);
+    [H_ENU] = get_H_ENU(xyz,const.a,const.f,H);
+    
+    %Get DOP matrix
+    DOP_matrix=inv(transpose(H)*H);
+    DOP_matrix_ENU=inv(transpose(H_ENU)*H_ENU);
+    
+    %Compute PDOP and HDOP from DOP matrix
+    PDOP_1(pr_line)=sqrt(trace(DOP_matrix(1:3,1:3)));
+    HDOP_1(pr_line)=sqrt(trace(DOP_matrix_ENU(1:2,1:2)));
+
+    if PDOP_1(pr_line) > 2.5 && pr_line ~=1
+        xyz=xyz_last;
+    end
+    
+    
+    
+    xyz_last = xyz;
     xyz_history=[xyz_history;[xyz(1),xyz(2),xyz(3)]];
     error_history = [error_history,norm(const.RF1-xyz(1:3))];
     clock_bias_history=[clock_bias_history,clock_bias];
@@ -177,23 +198,56 @@ for pr_line=1:size(input_raw,1)
     
     [~,~,clock_bias2,~]=calc_position(input_hui2,eph_aux2,input_eph2,TOW,WN,pr_filtered2);
     
-    for i=1:size(sat_pos,1)
-        for j=1:size(pr_filtered,1)
-            for k=1:size(pr_filtered2,1)
+    for k=1:size(pr_filtered2,1)
+        for i=1:size(sat_pos,1)
+            for j=1:size(pr_filtered,1)
+                
                 for l=1:size(d_sv,1)
+                    
+                    
                     if sat_pos(i,1)==pr_filtered(j,1) && sat_pos(i,1) == pr_filtered2(k,1) && sat_pos(i,1)== d_sv(l,1)
                         r=norm(const.RF1-sat_pos(i,2:4));
                         satellites_prerror=r-pr_filtered(j,2);
                         CF=satellites_prerror+(clock_bias2-clock_bias)-d_sv(l,2);
                         pr_filtered2(k,2)=pr_filtered2(k,2)+CF;
+                        
+                        
                     end
                     
                 end
             end
         end
-    end 
+        
+    end
+        not_dif_corected =[];
+        m=size(pr_filtered2,1);
+        for k=1:m
+            if ~ismember(pr_filtered2(k,1),d_sv(:,1))
+                not_dif_corected = [not_dif_corected,k];
+            end
+        end
+        
+            pr_filtered2(not_dif_corected(:),:)=[];
         
         [xyz2,sat_pos2,~,~]=calc_position(input_hui2,eph_aux2,input_eph2,TOW,WN,pr_filtered2);
+        
+%         [H] = get_H(pr_filtered2(:,2),sat_pos2(:,2:4),xyz2);
+%         [H_ENU] = get_H_ENU(xyz2,const.a,const.f,H);
+%         
+%         %Get DOP matrix
+%         DOP_matrix=inv(transpose(H)*H);
+%         DOP_matrix_ENU=inv(transpose(H_ENU)*H_ENU);
+%         
+%         %Compute PDOP and HDOP from DOP matrix
+%         PDOP_2(pr_line)=sqrt(trace(DOP_matrix(1:3,1:3)));
+%         HDOP_2(pr_line)=sqrt(trace(DOP_matrix_ENU(1:2,1:2)));
+        
+%         if PDOP_2(pr_line) > 2.5 && pr_line ~=1
+%             xyz2=xyz_last2;
+%         end
+        
+        xyz_last2 = xyz2;
+               
         xyz_history2=[xyz_history2;[xyz2(1),xyz2(2),xyz2(3)]];
         error_history2 = [error_history2,norm(const.RF2-xyz2(1:3))];
         TOW2(pr_line)=TOW;
@@ -203,14 +257,53 @@ end
 load handel
 player = audioplayer(y,Fs);
 play(player)
+
+
+
+figure
 plot(1:size(input_raw,1),error_history)
-hold on
+title("Erro de posição RF1")
+figure
 plot(1:size(input_raw2,1),error_history2)
-%plot(1:size(input_raw,1),error_history)
-% 
-% 
-% [xyz_history2]=calc_position(input_hui2,input_raw2,input_eph2,xyz_history);
-% 
-% 
-%  
-% 
+title("Erro de posição RF2")
+
+sum1_x=0;
+sum1_y=0;
+sum1_z=0;
+count1=0;
+for i=1:size(xyz_history,1)
+    
+        sum1_x=sum1_x+xyz_history(i,1);
+        sum1_y=sum1_y+xyz_history(i,2);
+        sum1_z=sum1_z+xyz_history(i,3);
+        count1=count1+1;
+    
+end
+
+sum2_x=0;
+sum2_y=0;
+sum2_z=0;
+count2=0;
+
+for i=1:size(xyz_history2,1)
+    
+        sum2_x=sum2_x+xyz_history2(i,1);
+        sum2_y=sum2_y+xyz_history2(i,2);
+        sum2_z=sum2_z+xyz_history2(i,3);
+        count2=count2+1;
+    
+end
+
+avg_xyz1=[sum1_x,sum1_y,sum1_z]./count1;
+avg_xyz2=[sum2_x,sum2_y,sum2_z]./count2;
+
+avg_llh_RF1=xyz2llh(avg_xyz1,const.a,const.f);
+avg_llh_RF1=[rad2deg(avg_llh_RF1(1)),rad2deg(avg_llh_RF1(2)),avg_llh_RF1(3)];
+avg_llh_RF2=xyz2llh(avg_xyz2,const.a,const.f);
+avg_llh_RF2=[rad2deg(avg_llh_RF2(1)),rad2deg(avg_llh_RF2(2)),avg_llh_RF2(3)];
+
+fprintf("A posição média para RF1 é:\n");
+disp(avg_llh_RF1);
+
+fprintf("A posição média para RF2 é:\n")
+disp(avg_llh_RF2);

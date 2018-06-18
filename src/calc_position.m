@@ -37,16 +37,17 @@ satellites_pos_out = [];
             
             az=atan2d(alpha_ENU,beta_ENU);
             el=asind(gamma_ENU);
-            
-            if el>5
-                
-                satellites_pos(n,:)=[S'];
-                satellites_ttx(n,:)=t_tx;
-                satellites_E(n,:)=E;
-                satellites_e(n,:)=e;
-                eph_masked(n,:)=eph_aux(j,:);
-                pr_masked(n,:)=pr_filtered(j,:);
-                n=n+1;
+            for l=1:size(pr_filtered,1)
+                if el>5 && SV_aux == (pr_filtered(l,1))
+                    
+                    satellites_pos(n,:)=[S'];
+                    satellites_ttx(n,:)=t_tx;
+                    satellites_E(n,:)=E;
+                    satellites_e(n,:)=e;
+                    eph_masked(n,:)=eph_aux(j,:);
+                    pr_masked(n,:)=pr_filtered(l,:);
+                    n=n+1;
+                end
             end
             satellites_pos_out=[satellites_pos_out;SV_aux,S'];
             

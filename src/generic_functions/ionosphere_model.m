@@ -17,19 +17,19 @@ position_llh=xyz2llh(position_xyz,const.a,const.f);
         satellite_ENU = ECEF2ENU((satellite_xyz(:,j)-position_xyz)',rad2deg(satellite_llh(1)),rad2deg(satellite_llh(2)));
         [alpha_ENU,beta_ENU,gamma_ENU]=get_direction_cosines(satellite_ENU);
 
-        az=atan2d(alpha_ENU,beta_ENU);
-        el=asind(gamma_ENU);
+        az=rad2semicircles(atan2(alpha_ENU,beta_ENU));
+        el=rad2semicircles(asin(gamma_ENU));
         
         psi=(0.0137/(el+0.11))-0.022;
         
-        phi_i=position_llh(1)+psi*cos(az);
+        phi_i=rad2semicircles(deg2rad(position_llh(1)))+psi*cos(az);
         if phi_i > +0.416
             phi_i = 0.416;
         elseif phi_i < -0.416
             phi_i=-0.416;
         end
         
-        lambda_i=position_llh(2)+(psi*sin(az))/cos(phi_i);
+        lambda_i=rad2semicircles(deg2rad(position_llh(2)))+(psi*sin(az))/cos(phi_i);
         
         t=(4.32*10^4)*lambda_i+gps_time(j);
         if t>=86400
@@ -55,7 +55,7 @@ position_llh=xyz2llh(position_xyz,const.a,const.f);
         end
         
         if abs(x)<1.57
-            delay=F*(5*10^(-9)+AMP(1-((x^2)/2)+((x^4)/24)));
+            delay=F*(5*10^(-9)+AMP*(1-((x^2)/2)+((x^4)/24)));
         else
             delay=F*5*10^(-9);
         end

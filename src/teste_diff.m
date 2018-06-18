@@ -10,8 +10,8 @@ const.Omegadot_e = 7.2921151467e-5;
 addpath('./test_functions/');
 addpath('./generic_functions/');
 warning('off','backtrace');
-const.RF1 = [4918528.02 -791210.72 3969759.39];%pos da base station
-const.RF2 = [4918525.18 -791212.21 3969762.19];
+const.RF1 = [4918526.668, -791212.115, 3969767.140];%pos da base station RF2
+const.RF2 = [4918533.320, -791212.572, 3969758.451];%pos da estação RF6
 
 input_raw = load('test_data/ub1.ubx.1744.327600.raw');
 input_eph = load('test_data/ub1.ubx.1744.327600.eph');

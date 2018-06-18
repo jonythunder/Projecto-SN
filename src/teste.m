@@ -15,12 +15,11 @@ warning('off','backtrace');
 
 RF1 = [4918528.02 -791210.72 3969759.39];
 
-WN = 1744;
-%TOW = 327796;
-TOW=(327839601/1000);
 
 
-error_history = [];
+
+
+
 
 
 % satellites_prerror = gs_error;
@@ -43,7 +42,7 @@ input_hui = input_hui(1,:); % File has duplicated data
 
 alpha = [input_hui(1,13),input_hui(1,15),input_hui(1,17),input_hui(1,19)];
 beta = [input_hui(1,21),input_hui(1,23),input_hui(1,25),input_hui(1,27)];
-
+error_history = [];
 
 %Index all seen satellites
 SVN_seen=[];
@@ -192,7 +191,7 @@ while stop
     pr_corrected(:,2)=pr_corrected(:,2)+tropospheric_delay'+ionospheric_delay'.*const.c;
     
     
-    if abs(norm(xyz(1:3)'-initial_estimate(1:3)))
+    if abs(norm(xyz(1:3)'-initial_estimate(1:3)))<10^-3
         stop=false;
     end
     

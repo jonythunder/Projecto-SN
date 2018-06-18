@@ -10,8 +10,12 @@ const.Omegadot_e = 7.2921151467e-5;
 addpath('./test_functions/');
 addpath('./generic_functions/');
 warning('off','backtrace');
-const.RF1 = [4918526.668, -791212.115, 3969767.140];%pos da base station RF2
-const.RF2 = [4918533.320, -791212.572, 3969758.451];%pos da esta��o RF6
+const.RF1 = [4918548.05800941 -791216.081612259 3969771.54527795];%pos da base station 
+const.RF2 = [4918531.68520011 -791214.325497741 3969776.62639603];
+% const.RF3 = [4918524.42 -791213.5 3969762.24];
+% const.RF5 = [4918534.82 -791211.81 3969750.68];%rf5
+% const.RF6 = [4918534.82 -791211.81 3969750.68];%rf6 d file
+% const.RF7 = [4918531.12 -791212.61 3969754.61];
 
 input_raw = load('test_data/ub1.ubx.1744.327600.raw');
 input_eph = load('test_data/ub1.ubx.1744.327600.eph');
@@ -61,7 +65,12 @@ error_history = [];
 error_history2 = [];
 clock_bias_history=[];
 
-
+error_history2_1 = [];
+error_history2_2 = [];
+error_history2_3 = [];
+error_history2_5 = [];
+error_history2_6 = [];
+error_history2_7 = [];
 
 
 xyz_history=[];
@@ -249,7 +258,12 @@ for pr_line=1:size(input_raw,1)
         xyz_last2 = xyz2;
                
         xyz_history2=[xyz_history2;[xyz2(1),xyz2(2),xyz2(3)]];
-        error_history2 = [error_history2,norm(const.RF2-xyz2(1:3))];
+        error_history2_1 = [error_history2_1,norm(const.RF1-xyz2(1:3))];
+        error_history2_2 = [error_history2_2,norm(const.RF2-xyz2(1:3))];
+%         error_history2_3 = [error_history2_3,norm(const.RF3-xyz2(1:3))];
+%         error_history2_5 = [error_history2_5,norm(const.RF5-xyz2(1:3))];
+%         error_history2_6 = [error_history2_6,norm(const.RF6-xyz2(1:3))];
+%         error_history2_7 = [error_history2_7,norm(const.RF7-xyz2(1:3))];
         TOW2(pr_line)=TOW;
         
 end
@@ -262,10 +276,30 @@ play(player)
 
 figure
 plot(1:size(input_raw,1),error_history)
-title("Erro de posição RF1")
+title("Erro de posi��o RF1")
 figure
-plot(1:size(input_raw2,1),error_history2)
-title("Erro de posição RF2")
+plot(1:size(input_raw2,1),error_history2_1)
+
+title("Erro de posi��o dif RF1")
+
+figure
+plot(1:size(input_raw2,1),error_history2_2)
+
+ title("Erro de posi��o dif RF2")
+% figure
+% plot(1:size(input_raw2,1),error_history2_3)
+% 
+% title("Erro de posição  dif RF3")
+% figure
+% plot(1:size(input_raw2,1),error_history2_5)
+% 
+% title("Erro de posição  dif RF5")
+% figure
+% plot(1:size(input_raw2,1),error_history2_6)
+% title("Erro de posição  dif RF6")
+% figure
+% plot(1:size(input_raw2,1),error_history2_7)
+% title("Erro de posição  dif RF7")
 
 sum1_x=0;
 sum1_y=0;
@@ -302,7 +336,7 @@ avg_llh_RF1=[rad2deg(avg_llh_RF1(1)),rad2deg(avg_llh_RF1(2)),avg_llh_RF1(3)];
 avg_llh_RF2=xyz2llh(avg_xyz2,const.a,const.f);
 avg_llh_RF2=[rad2deg(avg_llh_RF2(1)),rad2deg(avg_llh_RF2(2)),avg_llh_RF2(3)];
 
-fprintf("A posição média para RF1 é:\n");
+fprintf("A posição média para RF1 é:\n")
 disp(avg_llh_RF1);
 
 fprintf("A posição média para RF2 é:\n")

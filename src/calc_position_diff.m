@@ -1,4 +1,4 @@
-function [xyz,satellites_pos_out,clock_bias,d_sv]=calc_position(input_hui,eph_aux,input_eph,TOW,WN,pr_filtered)
+function [xyz,satellites_pos_out]=calc_position_diff(input_hui,eph_aux,input_eph,TOW,WN,pr_filtered)
 
 global const
 time_years=(WN*7)/365.25+1980;
@@ -74,7 +74,6 @@ satellites_pos_out = [];
         satellites_pos_out = [];
         initial_estimate=xyz';       
     end
- clock_bias=xyz(4);
  xyz=xyz(1:3)';
 end
 

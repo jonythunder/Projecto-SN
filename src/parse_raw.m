@@ -15,6 +15,7 @@ eph=strings(1,79);
 hui=strings(1,27);
 
 while stop
+    message_length=0;
     if strcmp(bitstream(i:i+1,:),['B5';'62'])%Checks if the first block is the sync block
         %Get the message length
         message_length=(bitstream(i+4:i+5,:));
@@ -38,11 +39,15 @@ while stop
         %Check if checksum is valid
         if CK_A==hex2dec(bitstream(i+message_length-2,:)) && CK_B==hex2dec(bitstream(i+message_length-1,:))
             
-            
+%             if n1==58
+%                 n1=58;
+%             end
             %Decode the message
             if strcmp(bitstream(i+2:i+3,:),['02';'10']) %If RXM-RAW message
-                raw(n1,:)=parse_RXM_RAW(bitstream(i+6:i+message_length-2,:));
-                n1=n1+1;
+                if message_length > 8
+                    raw(n1,:)=parse_RXM_RAW(bitstream(i+6:i+message_length-2,:));
+                    n1=n1+1;
+                end
                 
             elseif strcmp(bitstream(i+2:i+3,:),['0B';'31']) %If AID-EPH message
                 if message_length == 112 %If contains actual data
@@ -52,19 +57,24 @@ while stop
                 end
                 
             elseif strcmp(bitstream(i+2:i+3,:),['0B';'02']) %If AID-HUI message
-                hui(n3,:)=parse_AID_HUI(bitstream(i+6:i+message_length-2,:));
-                n3=n3+1;
+                if message_length > 8
+                    hui(n3,:)=parse_AID_HUI(bitstream(i+6:i+message_length-2,:));
+                    n3=n3+1;
+                end
             end
         end
-        
-        %disp(bitstream(i:i+message_length-1,:))
-        i=i+message_length;
-        if i>=i_max
-            stop=0;
-        end
-        %Pode ser substituido por um incremento do indice de bitstream se
-        %não encontrar o bloco de sync
     end
+    if message_length>0
+        i=i+message_length;
+    else
+        i=i+1;
+    end
+    
+    if i>=i_max
+        stop=0;
+    end
+    
+    
 end
 end
 

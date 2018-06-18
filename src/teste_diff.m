@@ -1,6 +1,5 @@
 clear;
-clc;
-global const
+clc;global const
 format longg
 const.a = 6378137;
 const.f = 1/298.257223563;
@@ -12,6 +11,7 @@ addpath('./test_functions/');
 addpath('./generic_functions/');
 warning('off','backtrace');
 const.RF1 = [4918528.02 -791210.72 3969759.39];%pos da base station
+const.RF2 = [4918525.18 -791212.21 3969762.19];
 
 input_raw = load('test_data/ub1.ubx.1744.327600.raw');
 input_eph = load('test_data/ub1.ubx.1744.327600.eph');
@@ -92,8 +92,8 @@ if size(input_raw,1) > size(input_raw2,1)
 elseif size(input_raw,1) < size(input_raw2,1)
     input_raw2 = input_raw2(1:size(input_raw,1),:);
 end
-    
-    
+
+
 
 
 for pr_line=1:size(input_raw,1)
@@ -130,14 +130,14 @@ for pr_line=1:size(input_raw,1)
     end
     
     
-base_pos = 0;
-[xyz,sat_pos,clock_bias,dsv]=calc_position(input_hui,eph_aux,input_eph,TOW,WN,pr_filtered);
-xyz_history=[xyz_history;[xyz(1),xyz(2),xyz(3)]];
-error_history = [error_history,norm(const.RF1-xyz(1:3))];
-clock_bias_history=[clock_bias_history,clock_bias];
-TOW1(pr_line)=TOW;
-
-
+    base_pos = 0;
+    [xyz,sat_pos,clock_bias,d_sv]=calc_position(input_hui,eph_aux,input_eph,TOW,WN,pr_filtered);
+    xyz_history=[xyz_history;[xyz(1),xyz(2),xyz(3)]];
+    error_history = [error_history,norm(const.RF1-xyz(1:3))];
+    clock_bias_history=[clock_bias_history,clock_bias];
+    TOW1(pr_line)=TOW;
+    
+    
     TOW=input_raw2(pr_line,1)/1000;
     WN=input_raw2(pr_line,2);
     pr_raw2 = zeros(50,2); pr_filtered2 = [];
@@ -169,36 +169,40 @@ TOW1(pr_line)=TOW;
             end
         end
     end
-
-    auxv=zeros(size(pr_filtered2,1)-size(dsv,2),1);
-    dsv_=dsv';
-    dsv=[dsv(1);dsv(5);dsv(4);dsv(2);dsv(3);dsv(6);0;0;dsv(7)];
     
-    [xyz2,sat_pos2,clock_bias2,~]=calc_position(input_hui2,eph_aux2,input_eph2,TOW,WN,pr_filtered2);
+    
+    
+    
+    
+    
+    [~,~,clock_bias2,~]=calc_position(input_hui2,eph_aux2,input_eph2,TOW,WN,pr_filtered2);
     
     for i=1:size(sat_pos,1)
         for j=1:size(pr_filtered,1)
             for k=1:size(pr_filtered2,1)
-            if sat_pos(i,1)==pr_filtered(j,1) && sat_pos(i,1) == pr_filtered2(k,1)
-                r=norm(const.RF1-sat_pos(i,2:4));
-                satellites_prerror=r-pr_filtered(j,2);
-                CF=satellites_prerror+(clock_bias2-clock_bias);%-dsv(k,1);
-                pr_filtered2(k,2)=pr_filtered2(k,2)+CF;
-            end
+                for l=1:size(d_sv,1)
+                    if sat_pos(i,1)==pr_filtered(j,1) && sat_pos(i,1) == pr_filtered2(k,1) && sat_pos(i,1)== d_sv(l,1)
+                        r=norm(const.RF1-sat_pos(i,2:4));
+                        satellites_prerror=r-pr_filtered(j,2);
+                        CF=satellites_prerror+(clock_bias2-clock_bias)-d_sv(l,2);
+                        pr_filtered2(k,2)=pr_filtered2(k,2)+CF;
+                    end
+                    
+                end
             end
         end
-    end
-    pr_filtered2(:,2)=pr_filtered2(:,2)-dsv;
-    
-    [xyz2,sat_pos2,clock_bias2,~]=calc_position(input_hui2,eph_aux2,input_eph2,TOW,WN,pr_filtered2);
-    xyz_history2=[xyz_history2;[xyz2(1),xyz2(2),xyz2(3)]];
-    error_history2 = [error_history2,norm(const.RF1-xyz2(1:3))];
-    TOW2(pr_line)=TOW;
-
+    end 
+        
+        [xyz2,sat_pos2,~,~]=calc_position(input_hui2,eph_aux2,input_eph2,TOW,WN,pr_filtered2);
+        xyz_history2=[xyz_history2;[xyz2(1),xyz2(2),xyz2(3)]];
+        error_history2 = [error_history2,norm(const.RF2-xyz2(1:3))];
+        TOW2(pr_line)=TOW;
+        
 end
-
-
-
+ 
+load handel
+player = audioplayer(y,Fs);
+play(player)
 plot(1:size(input_raw,1),error_history)
 hold on
 plot(1:size(input_raw2,1),error_history2)

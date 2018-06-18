@@ -3,7 +3,7 @@ function [S,t_tx,E,count] = get_sat_position(t_rx,R,A,dn,M0,e,argP,i0,IDOT,Omega
 %   Detailed explanation goes here
 
 %1mm precision
-precision=1*10^-6;
+precision=1*10^-3;
 
 %Speed of light
 c=299792458;

@@ -56,8 +56,8 @@ satellites_pos_out = [];
         
         pr_corrected=pr_masked;
         %pr_corrected=pr_filtered;
-       
-        pr_corrected(:,2)=pr_corrected(:,2)+(d_sv(:,2));
+        ds_v_
+        pr_corrected(:,2)=pr_corrected(:,2)+(d_sv(:,2))';
         
         [xyz,satellites_pos,niter_LS]=ls_estimation(pr_corrected(:,2),satellites_pos(:,1:3),initial_estimate);
         

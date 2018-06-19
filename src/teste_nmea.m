@@ -27,5 +27,5 @@ for i=1:size(input_nmea_test,1)
 end
 input_nmea_test(erro(:),:)=[];
 
-kmlwritepoint('kml_teste.kml', input_nmea_test(:,1), input_nmea_test(:,2), 'Name', []);
+kmlwriteline('kml_teste_line.kml', input_nmea_test(:,1), input_nmea_test(:,2));
 

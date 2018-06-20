@@ -1,5 +1,6 @@
 clear;
-clc;global const
+clc;
+global const
 format longg
 const.a = 6378137;
 const.f = 1/298.257223563;
@@ -7,15 +8,11 @@ const.c = 299792458;
 const.F = - 4.442807633*(10^(-10));
 const.mu_e = 3.986005e+14;
 const.Omegadot_e = 7.2921151467e-5;
-addpath('./test_functions/');
-addpath('./generic_functions/');
+addpath('./functions/');
 warning('off','backtrace');
-const.RF1 = [4918548.05800941 -791216.081612259 3969771.54527795];%pos da base station 
+const.RF1 = [4918548.05800941 -791216.081612259 3969771.54527795];%pos da base station
 const.RF2 = [4918540.41089466 -791215.369841806 3969777.56137549];
-% const.RF3 = [4918524.42 -791213.5 3969762.24];
-% const.RF5 = [4918534.82 -791211.81 3969750.68];%rf5
-% const.RF6 = [4918534.82 -791211.81 3969750.68];%rf6 d file
-% const.RF7 = [4918531.12 -791212.61 3969754.61];
+
 
 input_raw = load('test_data/ub1.ubx.1744.327600.raw');
 input_eph = load('test_data/ub1.ubx.1744.327600.eph');
@@ -24,7 +21,7 @@ input_raw2 = load('test_data/ub2.ubx.1744.327600.raw');
 input_eph2 = load('test_data/ub2.ubx.1744.327600.eph');
 input_hui2 = load('test_data/ub2.ubx.1744.327600.hui');
 
-%%
+
 
 SVN_seen=[];
 n=1;
@@ -56,23 +53,10 @@ end
 
 pr_raw = zeros(50,2); pr_filtered = []; pr_line = [];
 
-history_size_eph_aux = [];
-history_size_eph_masked = [];
-history_size_pr_masked = [];
-history_eph_masked = zeros(size(input_raw,1),8);
-history_pr_masked = zeros(size(input_raw,1),8);
 error_history = [];
 error_history2 = [];
 clock_bias_history=[];
-
-error_history2_1 = [];
 error_history2_2 = [];
-error_history2_3 = [];
-error_history2_5 = [];
-error_history2_6 = [];
-error_history2_7 = [];
-
-
 xyz_history=[];
 xyz_history2=[];
 
@@ -154,12 +138,10 @@ for pr_line=1:size(input_raw,1)
     %Compute PDOP and HDOP from DOP matrix
     PDOP_1(pr_line)=sqrt(trace(DOP_matrix(1:3,1:3)));
     HDOP_1(pr_line)=sqrt(trace(DOP_matrix_ENU(1:2,1:2)));
-
+    
     if PDOP_1(pr_line) > 2.5 && pr_line ~=1
         xyz=xyz_last;
     end
-    
-    
     
     xyz_last = xyz;
     xyz_history=[xyz_history;[xyz(1),xyz(2),xyz(3)]];
@@ -199,105 +181,70 @@ for pr_line=1:size(input_raw,1)
             end
         end
     end
-    
-    
-    
-    
-    
-    
+ 
     [~,~,clock_bias2,~]=calc_position(input_hui2,eph_aux2,input_eph2,TOW,WN,pr_filtered2);
     
     for k=1:size(pr_filtered2,1)
         for i=1:size(sat_pos,1)
             for j=1:size(pr_filtered,1)
-                
                 for l=1:size(d_sv,1)
-                    
-                    
-                    if sat_pos(i,1)==pr_filtered(j,1) && sat_pos(i,1) == pr_filtered2(k,1) && sat_pos(i,1)== d_sv(l,1)
+                        if sat_pos(i,1)==pr_filtered(j,1) && sat_pos(i,1) == pr_filtered2(k,1) && sat_pos(i,1)== d_sv(l,1)
                         r=norm(const.RF1-sat_pos(i,2:4));
                         satellites_prerror=r-pr_filtered(j,2);
                         CF=satellites_prerror+(clock_bias2-clock_bias)-d_sv(l,2);
-                        pr_filtered2(k,2)=pr_filtered2(k,2)+CF;
-                        
-                        
+                        pr_filtered2(k,2)=pr_filtered2(k,2)+CF; 
                     end
                     
                 end
             end
         end
-        
     end
-        not_dif_corected =[];
-        m=size(pr_filtered2,1);
-        for k=1:m
-            if ~ismember(pr_filtered2(k,1),d_sv(:,1))
-                not_dif_corected = [not_dif_corected,k];
-            end
+    not_dif_corected =[];
+    m=size(pr_filtered2,1);
+    
+    for k=1:m
+        if ~ismember(pr_filtered2(k,1),d_sv(:,1))
+            not_dif_corected = [not_dif_corected,k];
         end
-        
-            pr_filtered2(not_dif_corected(:),:)=[];
-        
-        [xyz2,sat_pos2,~,~]=calc_position(input_hui2,eph_aux2,input_eph2,TOW,WN,pr_filtered2);
-        
-%         [H] = get_H(pr_filtered2(:,2),sat_pos2(:,2:4),xyz2);
-%         [H_ENU] = get_H_ENU(xyz2,const.a,const.f,H);
-%         
-%         %Get DOP matrix
-%         DOP_matrix=inv(transpose(H)*H);
-%         DOP_matrix_ENU=inv(transpose(H_ENU)*H_ENU);
-%         
-%         %Compute PDOP and HDOP from DOP matrix
-%         PDOP_2(pr_line)=sqrt(trace(DOP_matrix(1:3,1:3)));
-%         HDOP_2(pr_line)=sqrt(trace(DOP_matrix_ENU(1:2,1:2)));
-        
-%         if PDOP_2(pr_line) > 2.5 && pr_line ~=1
-%             xyz2=xyz_last2;
-%         end
-        
-        xyz_last2 = xyz2;
-               
-        xyz_history2=[xyz_history2;[xyz2(1),xyz2(2),xyz2(3)]];
-        error_history2_1 = [error_history2_1,norm(const.RF1-xyz2(1:3))];
-        error_history2_2 = [error_history2_2,norm(const.RF2-xyz2(1:3))];
-%         error_history2_3 = [error_history2_3,norm(const.RF3-xyz2(1:3))];
-%         error_history2_5 = [error_history2_5,norm(const.RF5-xyz2(1:3))];
-%         error_history2_6 = [error_history2_6,norm(const.RF6-xyz2(1:3))];
-%         error_history2_7 = [error_history2_7,norm(const.RF7-xyz2(1:3))];
-        TOW2(pr_line)=TOW;
-        
+    end
+    
+    pr_filtered2(not_dif_corected(:),:)=[];
+    
+    [xyz2,sat_pos2,~,~]=calc_position(input_hui2,eph_aux2,input_eph2,TOW,WN,pr_filtered2);
+    
+    %         [H] = get_H(pr_filtered2(:,2),sat_pos2(:,2:4),xyz2);
+    %         [H_ENU] = get_H_ENU(xyz2,const.a,const.f,H);
+    %
+    %         %Get DOP matrix
+    %         DOP_matrix=inv(transpose(H)*H);
+    %         DOP_matrix_ENU=inv(transpose(H_ENU)*H_ENU);
+    %
+    %         %Compute PDOP and HDOP from DOP matrix
+    %         PDOP_2(pr_line)=sqrt(trace(DOP_matrix(1:3,1:3)));
+    %         HDOP_2(pr_line)=sqrt(trace(DOP_matrix_ENU(1:2,1:2)));
+    
+    %         if PDOP_2(pr_line) > 2.5 && pr_line ~=1
+    %             xyz2=xyz_last2;
+    %         end
+    
+    xyz_last2 = xyz2;
+    
+    xyz_history2=[xyz_history2;[xyz2(1),xyz2(2),xyz2(3)]];
+    
+    error_history2_2 = [error_history2_2,norm(const.RF2-xyz2(1:3))];
+    TOW2(pr_line)=TOW;
+    
 end
- 
-
-
-
 
 figure
 plot(1:size(input_raw,1),error_history)
-title("Erro de posi��o RF1")
-figure
-plot(1:size(input_raw2,1),error_history2_1)
+title("Erro de posi��o UB1")
 
-title("Erro de posi��o dif RF1")
 
 figure
 plot(1:size(input_raw2,1),error_history2_2)
+title("Erro de posi��o UB2. Difrencial (UB1 como esta��o base)")
 
- title("Erro de posi��o dif RF2")
-% figure
-% plot(1:size(input_raw2,1),error_history2_3)
-% 
-% title("Erro de posição  dif RF3")
-% figure
-% plot(1:size(input_raw2,1),error_history2_5)
-% 
-% title("Erro de posição  dif RF5")
-% figure
-% plot(1:size(input_raw2,1),error_history2_6)
-% title("Erro de posição  dif RF6")
-% figure
-% plot(1:size(input_raw2,1),error_history2_7)
-% title("Erro de posição  dif RF7")
 
 sum1_x=0;
 sum1_y=0;
@@ -305,10 +252,10 @@ sum1_z=0;
 count1=0;
 for i=1:size(xyz_history,1)
     
-        sum1_x=sum1_x+xyz_history(i,1);
-        sum1_y=sum1_y+xyz_history(i,2);
-        sum1_z=sum1_z+xyz_history(i,3);
-        count1=count1+1;
+    sum1_x=sum1_x+xyz_history(i,1);
+    sum1_y=sum1_y+xyz_history(i,2);
+    sum1_z=sum1_z+xyz_history(i,3);
+    count1=count1+1;
     
 end
 
@@ -319,10 +266,10 @@ count2=0;
 
 for i=1:size(xyz_history2,1)
     
-        sum2_x=sum2_x+xyz_history2(i,1);
-        sum2_y=sum2_y+xyz_history2(i,2);
-        sum2_z=sum2_z+xyz_history2(i,3);
-        count2=count2+1;
+    sum2_x=sum2_x+xyz_history2(i,1);
+    sum2_y=sum2_y+xyz_history2(i,2);
+    sum2_z=sum2_z+xyz_history2(i,3);
+    count2=count2+1;
     
 end
 
@@ -334,8 +281,8 @@ avg_llh_RF1=[rad2deg(avg_llh_RF1(1)),rad2deg(avg_llh_RF1(2)),avg_llh_RF1(3)];
 avg_llh_RF2=xyz2llh(avg_xyz2,const.a,const.f);
 avg_llh_RF2=[rad2deg(avg_llh_RF2(1)),rad2deg(avg_llh_RF2(2)),avg_llh_RF2(3)];
 
-fprintf("A posição média para RF1 é:\n")
+fprintf("A posição média para UB1 é:\n")
 disp(avg_llh_RF1);
 
-fprintf("A posição média para RF2 é:\n")
+fprintf("A posição média para UB2 é:\n")
 disp(avg_llh_RF2);

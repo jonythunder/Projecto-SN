@@ -8,8 +8,7 @@ const.c = 299792458;
 const.F = - 4.442807633*(10^(-10));
 const.mu_e = 3.986005e+14;
 const.Omegadot_e = 7.2921151467e-5;
-addpath('./test_functions/');
-addpath('./generic_functions/');
+addpath('./functions/');
 warning('off','backtrace');
 const.RF1 = [4918528.02 -791210.72 3969759.39];%pos da base station
 

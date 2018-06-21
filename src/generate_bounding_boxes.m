@@ -128,14 +128,14 @@ for j=1:n_zonas_rest
         corner8_ENU=[corner4_ENU(1),corner4_ENU(2),corner4_ENU(3)+height_box];
         
         
-        corner1_ECEF=ENU2ECEF(corner1_ENU,corner1(1),corner1(2))+corner1;
-        corner2_ECEF=ENU2ECEF(corner2_ENU,corner1(1),corner1(2))+corner1;
-        corner3_ECEF=ENU2ECEF(corner3_ENU,corner1(1),corner1(2))+corner1;
-        corner4_ECEF=ENU2ECEF(corner4_ENU,corner1(1),corner1(2))+corner1;
-        corner5_ECEF=ENU2ECEF(corner5_ENU,corner1(1),corner1(2))+corner1;
-        corner6_ECEF=ENU2ECEF(corner6_ENU,corner1(1),corner1(2))+corner1;
-        corner7_ECEF=ENU2ECEF(corner7_ENU,corner1(1),corner1(2))+corner1;
-        corner8_ECEF=ENU2ECEF(corner8_ENU,corner1(1),corner1(2))+corner1;
+        corner1_ECEF=ENU2ECEF(corner1_ENU,rad2deg(corner1(1)),rad2deg(corner1(2)))+corner1_ECEF;
+        corner2_ECEF=ENU2ECEF(corner2_ENU,rad2deg(corner1(1)),rad2deg(corner1(2)))+corner1_ECEF;
+        corner3_ECEF=ENU2ECEF(corner3_ENU,rad2deg(corner1(1)),rad2deg(corner1(2)))+corner1_ECEF;
+        corner4_ECEF=ENU2ECEF(corner4_ENU,rad2deg(corner1(1)),rad2deg(corner1(2)))+corner1_ECEF;
+        corner5_ECEF=ENU2ECEF(corner5_ENU,rad2deg(corner1(1)),rad2deg(corner1(2)))+corner1_ECEF;
+        corner6_ECEF=ENU2ECEF(corner6_ENU,rad2deg(corner1(1)),rad2deg(corner1(2)))+corner1_ECEF;
+        corner7_ECEF=ENU2ECEF(corner7_ENU,rad2deg(corner1(1)),rad2deg(corner1(2)))+corner1_ECEF;
+        corner8_ECEF=ENU2ECEF(corner8_ENU,rad2deg(corner1(1)),rad2deg(corner1(2)))+corner1_ECEF;
         
         area(j).corners=[corner1_ECEF;corner2_ECEF;corner3_ECEF;corner4_ECEF;corner5_ECEF...
             ;corner6_ECEF;corner7_ECEF;corner8_ECEF];

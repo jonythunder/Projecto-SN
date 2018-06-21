@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+   <Document>
+      <name>rec</name>
+      <Placemark>
+         <Snippet maxLines="0"> </Snippet>
+         <description> </description>
+         <name>Polygon 1</name>
+         <Style>
+            <LineStyle>
+               <color>ffff0000</color>
+            </LineStyle>
+            <PolyStyle>
+               <color>80ffff00</color>
+               <fill>1</fill>
+               <outline>1</outline>
+            </PolyStyle>
+         </Style>
+         <Polygon>
+            <outerBoundaryIs>
+               <LinearRing>
+                  <coordinates> -9.13913611111111,38.7374916666667,0 -9.13913611111111,38.737382116523,0 -9.13901075667503,38.7373821164558,0 -9.13901075648354,38.7374916665995,0 -9.13913611111111,38.7374916666667,0</coordinates>
+               </LinearRing>
+            </outerBoundaryIs>
+         </Polygon>
+      </Placemark>
+   </Document>
+</kml>

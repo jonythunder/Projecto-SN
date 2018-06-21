@@ -238,12 +238,12 @@ end
 
 figure
 plot(1:size(input_raw,1),error_history)
-title("Erro de posição UB1")
+title("Erro de posiÃ§Ã£o UB1")
 
 
 figure
 plot(1:size(input_raw2,1),error_history2_2)
-title("Erro de posição UB2. Difrencial (UB1 como estação base)")
+title("Erro de posiÃ§Ã£o UB2. Difrencial (UB1 como estaÃ§Ã£o base)")
 
 
 sum1_x=0;

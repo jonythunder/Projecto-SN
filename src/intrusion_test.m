@@ -51,7 +51,7 @@ center_h=136.719999995178;
 radius=area(1).radius;
 
 [lat1,lon1] = scircle1(center_lat,center_lon,radius,[],earthRadius('m'));
-kmlwritepolygon('spherical_area_projection.kml',lat,lon,center_h,'EdgeColor','c');
+kmlwritepolygon('spherical_area_projection.kml',lat1,lon1,'EdgeColor','c','FaceColor','c','FaceAlpha',.5);
 
 
 %Test for cylindrical area
@@ -60,10 +60,10 @@ kmlwritepolygon('spherical_area_projection.kml',lat,lon,center_h,'EdgeColor','c'
 center_lat=38.7367861111111;
 center_lon=-9.13855833333333;
 center_h=129.999999999042;
-radius=area(1).radius;
+radius=area(2).radius;
 
 [lat1,lon1] = scircle1(center_lat,center_lon,radius,[],earthRadius('m'));
-kmlwritepolygon('cylindrical_area_projection.kml',lat,lon,center_h,'EdgeColor','c');
+kmlwritepolygon('cylindrical_area_projection.kml',lat1,lon1,'EdgeColor','r','FaceColor','r','FaceAlpha',.5);
 
 
 %Test for box area
@@ -74,5 +74,5 @@ point2=[38.7374916665995 -9.13901075648354 120.000009299696];
 point3=[38.7373821164558 -9.13901075667503 120.000020927243];
 point4=[38.737382116523 -9.13913611111111 120.000011626626];
 
-kmlwritepolygon('cylindrical_area_projection.kml',[point1(1) point2(1) point3(1) point4(1),...
-     [point1(2),point2(2),point3(2),point4(2)],[point1(3),point2(3),point3(3),point4(3)],'EdgeColor','c');
+kmlwritepolygon('box_area_projection.kml',[point1(1) point2(1) point3(1) point4(1)],...
+     [point1(2),point2(2),point3(2),point4(2)],'CutPolygons',false,'EdgeColor','g','FaceColor','g','FaceAlpha',.5);

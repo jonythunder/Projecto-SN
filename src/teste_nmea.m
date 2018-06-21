@@ -30,4 +30,4 @@ input_nmea_test(erro(:),:)=[];
 
 kmlwritepoint('kml_teste.kml', input_nmea_test(:,1), input_nmea_test(:,2), 'Name', []);
 kmlwriteline('kml_teste_line.kml', input_nmea_test(:,1), input_nmea_test(:,2));
-
+kmlwritepolygon('kml_teste_poly.kml', input_nmea_test(:,1), input_nmea_test(:,2))

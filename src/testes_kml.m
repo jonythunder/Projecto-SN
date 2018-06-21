@@ -68,3 +68,26 @@ long_rec = [point1(2) point2(2) point3(2) point4(2)];
 alt_rec = [point1(3) point2(3) point3(3) point4(3)];
 
 kmlwritepolygon('rec.kml',lat_rec,long_rec,'EdgeColor','b','FaceColor','c','FaceAlpha',.5);
+
+
+
+
+center_lat=38.7367861111111;
+center_long=-9.13855833333333;
+center_h=129.999999999042;
+%radius=area(1).radius;
+[latcil,longcil] = scircle1(center_lat,center_long,10,[],earthRadius('m'));
+kmlwritepolygon('cil.kml',latc,longc, ...
+      'EdgeColor','r','FaceColor','r','FaceAlpha',.5)
+  
+  
+%   plotm(latcil,longcil,'m')
+%   hold on
+%   plotm(latc,longc,'m')
+  
+%   axesm('mercator','MapLatLimit',[-30 30],'MapLonLimit',[-30 30]);
+%   [latc1,longc1] = scircle1(0,0,30,[],earthRadius('m'));
+%   [latc2,longc2] = scircle1(0,0,40,[],earthRadius('m'));
+%   plotm(latc1,longc1,'g')
+%   hold on
+%   plotm(latc2,longc2,'r')

@@ -47,12 +47,26 @@ load areas.mat;
 %Use the coordinates used to create the area
 center_lat=38.7367861111111;
 center_lon=-9.13855833333334;
-radius=40;
+center_h=136.719999995178;
+radius=area(1).radius;
 kmlwrite
 
 
 %Test for cylindrical area
 [overlap_out_cylinder] = intrusion_detection(input_nmea_test(:,1:3),area(2));
+%Use the coordinates used to create the area
+center_lat=38.7367861111111;
+center_lon=-9.13855833333333;
+center_h=129.999999999042;
+radius=area(1).radius;
+
+
 
 %Test for box area
 [overlap_out_box] = intrusion_detection(input_nmea_test(:,1:3),area(3));
+%Use the coordinates used to create the area
+point1=[38.7374916666667 -9.13913611111111 120.000000000489];
+point2=[38.7374916665995 -9.13901075648354 120.000009299696];
+point3=[38.7373821164558 -9.13901075667503 120.000020927243];
+point4=[38.737382116523 -9.13913611111111 120.000011626626];
+
